@@ -1,0 +1,5 @@
+main: net.urbanmc.treasurehunter.TreasureHunter
+name: TreasureHunter
+version: 0.1
+description: Spawns chests around the world at intervals containing various loot
+authors: [Elian, Silverwolfg11]

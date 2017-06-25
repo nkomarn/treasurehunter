@@ -14,7 +14,7 @@ public class SpawnTask extends BukkitRunnable {
 		return instance;
 	}
 
-	public void start(TreasureHunter plugin) {
+	void start(TreasureHunter plugin) {
 		runTaskTimer(plugin, 0, 72000);
 	}
 

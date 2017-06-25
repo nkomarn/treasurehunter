@@ -7,7 +7,7 @@ public class TreasureChest {
 	private TreasureChestType type;
 	private Block block;
 
-	private TreasureChest(TreasureChestType type, Block block) {
+	public TreasureChest(TreasureChestType type, Block block) {
 		this.type = type;
 		this.block = block;
 	}

@@ -1,0 +1,5 @@
+TODO:
+- Add listeners to check for god, fly, etc. Make sure the players cannot drop the compass.
+- Figure out how to make compass point towards chest location.
+- Broadcast starting message.
+- Everything else. Gl bro gooodddluckkkk.

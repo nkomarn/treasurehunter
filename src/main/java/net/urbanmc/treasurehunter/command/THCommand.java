@@ -1,5 +1,7 @@
 package net.urbanmc.treasurehunter.command;
 
+import net.urbanmc.treasurehunter.command.subcommands.CancelSub;
+import net.urbanmc.treasurehunter.command.subcommands.SpawnSub;
 import net.urbanmc.treasurehunter.command.subcommands.StartSub;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.object.Permission;
@@ -22,6 +24,8 @@ public class THCommand implements CommandExecutor {
 
     private void registerSubs() {
         subList.add(new StartSub());
+        subList.add(new SpawnSub());
+        subList.add(new CancelSub());
     }
 
 
@@ -45,6 +49,8 @@ public class THCommand implements CommandExecutor {
             return true;
         }
 
+        sub.preCommand(sender, args);
+
         return true;
     }
 
@@ -59,7 +65,10 @@ public class THCommand implements CommandExecutor {
     }
 
     private SubCommand matchSub(String args0) {
-        
+
+        for(SubCommand sub : subList)
+            if(sub.matchSub(args0))
+                return sub;
 
         return null;
     }

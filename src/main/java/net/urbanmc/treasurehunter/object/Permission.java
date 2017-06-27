@@ -3,7 +3,9 @@ package net.urbanmc.treasurehunter.object;
 public enum Permission {
 
     COMMAND_BASE ("command"),
-    START_SUB ("start");
+    START_SUB ("start"),
+    SPAWN_SUB ("spawn"),
+    CANCEL_SUB ("cancel");
 
 
 

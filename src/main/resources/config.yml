@@ -1,0 +1,5 @@
+# TreasureHunter Configuration #
+################################
+
+# TreasureHunter only runs in one normal world! (not nether or end)
+world: 'world'

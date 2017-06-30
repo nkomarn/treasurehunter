@@ -6,35 +6,35 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 public class Messages {
-    private static Messages instance = new Messages();
+	private static Messages instance = new Messages();
 
-    private static ResourceBundle bundle;
+	private ResourceBundle bundle;
 
-    public static Messages getInstance() {
-        return instance;
-    }
+	private Messages() {
+		loadBundle();
+	}
 
-    private Messages() {
-        loadBundle();
-    }
+	public static String getString(String key, Object... args) {
+		try {
+			return instance.format(instance.bundle.getString(key), args);
+		} catch (Exception e) {
+			return key;
+		}
+	}
 
-    private void loadBundle() {
-        bundle = ResourceBundle.getBundle("messages");
-    }
+	private void loadBundle() {
+		bundle = ResourceBundle.getBundle("messages");
+	}
 
-    public static String getString(String key, Object... args) {
-        return format(bundle.getString(key), args);
-    }
+	private String format(String message, Object... args) {
+		message = message.replace("{prefix}", bundle.getString("prefix"));
 
-    private static String format(String message, Object... args) {
-        message = message.replace("{prefix}", bundle.getString("prefix"));
+		if (args != null) {
+			message = MessageFormat.format(message, args);
+		}
 
-        if (args != null) {
-            message = MessageFormat.format(message, args);
-        }
+		message = ChatColor.translateAlternateColorCodes('&', message);
 
-        message = ChatColor.translateAlternateColorCodes('&', message);
-
-        return message;
-    }
+		return message;
+	}
 }

@@ -1,22 +1,75 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
+import net.urbanmc.treasurehunter.manager.Messages;
+import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
+import net.urbanmc.treasurehunter.object.TreasureChest;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.*;
 
 public class StartSub extends SubCommand{
 
+    private List<UUID> warned = new ArrayList<>();
+
+    public static ItemStack compass;
 
     public StartSub() {
         super("start", Permission.START_SUB, true);
+        createCompass();
+    }
+
+    private void createCompass() {
+        compass = new ItemStack(Material.COMPASS, 1);
+
+        ItemMeta meta = compass.getItemMeta();
+
+        meta.setDisplayName(Messages.getString("compass.name"));
+        meta.setLore(Collections.singletonList(Messages.getString("compass.desc")));
+
+        compass.setItemMeta(meta);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
 
-        /* Todo So in my failure of a plugin I made a warning message that people had to accept before they could recieve the cordinates (no cords this time).
-        Keep the warning message and when they accept give them A COMPASS. You should also figure out how to make a compass point to the treasure chest's location
-        Reason for Compass: So many people will give away cords and many diamond donators will just fly to the area. (But remember once they start they cannot use /fly or /god).*/
+        if(TreasureChestManager.getInstance().getCurrentChest() == null) {
+            sender.sendMessage(Messages.getString("command.no-chest"));
+            return;
+        }
 
+        TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
+        Player p = (Player) sender;
+
+        if(chest.getCancelled().contains(p.getUniqueId())) {
+            sender.sendMessage(Messages.getString("command.start.cancelled"));
+            return;
+        }
+
+        if(chest.getHunting().contains(p.getUniqueId())) {
+            //Todo Give them another compass maybe or just deny it...
+            return;
+        }
+
+        if(!warned.contains(p.getUniqueId())) {
+            sender.sendMessage(Messages.getString("command.start.warning"));
+
+            warned.add(p.getUniqueId());
+            return;
+        }
+
+        warned.remove(p.getUniqueId());
+
+        chest.getHunting().add(p.getUniqueId());
+
+        sender.sendMessage(Messages.getString("command.start.start-hunt"));
+
+        p.getInventory().addItem(compass.clone());
     }
 }

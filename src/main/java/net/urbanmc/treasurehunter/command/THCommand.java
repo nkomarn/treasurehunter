@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.command;
 
+import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.command.subcommands.CancelSub;
 import net.urbanmc.treasurehunter.command.subcommands.SpawnSub;
 import net.urbanmc.treasurehunter.command.subcommands.StartSub;
@@ -17,14 +18,16 @@ import java.util.ArrayList;
 public class THCommand implements CommandExecutor {
 
     private ArrayList<SubCommand> subList;
+    private TreasureHunter plugin;
 
-    public THCommand() {
+    public THCommand(TreasureHunter plugin) {
+        this.plugin = plugin;
         registerSubs();
     }
 
     private void registerSubs() {
         subList.add(new StartSub());
-        subList.add(new SpawnSub());
+        subList.add(new SpawnSub(plugin));
         subList.add(new CancelSub());
     }
 

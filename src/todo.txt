@@ -1,5 +1,6 @@
 TODO:
-- Add listeners to check for god, fly, etc. Make sure the players cannot drop the compass.
-- Figure out how to make compass point towards chest location.
+- Add listeners for pvp.
 - Broadcast starting message.
-- Everything else. Gl bro gooodddluckkkk.
+- Make chest have items, create chest files.
+- Make chest randomizer
+- Broadcast end messages, make chest disappear

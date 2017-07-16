@@ -20,6 +20,10 @@
             <id>elian-repo</id>
             <url>${elian-repo.read.url}</url>
         </repository>
+        <repository>
+            <id>ess-repo</id>
+            <url>http://repo.ess3.net/content/groups/essentials</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -39,6 +43,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>Essentials</artifactId>
+            <version>2.13.1</version>
         </dependency>
     </dependencies>
 

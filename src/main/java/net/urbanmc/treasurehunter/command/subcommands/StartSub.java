@@ -1,5 +1,7 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
+import com.earth2me.essentials.Essentials;
+import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
@@ -71,5 +73,9 @@ public class StartSub extends SubCommand{
         sender.sendMessage(Messages.getString("command.start.start-hunt"));
 
         p.getInventory().addItem(compass.clone());
+
+        p.setFlying(false);
+
+        TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
     }
 }

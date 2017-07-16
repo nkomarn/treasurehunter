@@ -27,6 +27,8 @@ public class CompassListener implements Listener{
 
         e.setCancelled(true);
 
+        //The code below ensures that even if they give their compass to another player it won't work :>
+
         if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getPlayer().getUniqueId())) {
             e.getPlayer().sendMessage(Messages.getString("compass.invalid-finder"));
 

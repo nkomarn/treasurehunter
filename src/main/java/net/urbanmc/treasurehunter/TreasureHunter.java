@@ -1,37 +1,41 @@
 package net.urbanmc.treasurehunter;
 
 import com.earth2me.essentials.Essentials;
+import net.urbanmc.randomtp.RandomTP;
 import net.urbanmc.treasurehunter.command.THCommand;
-import net.urbanmc.treasurehunter.listeners.CompassListener;
-import net.urbanmc.treasurehunter.listeners.FlyListener;
-import net.urbanmc.treasurehunter.listeners.GodListener;
+import net.urbanmc.treasurehunter.listener.CompassListener;
+import net.urbanmc.treasurehunter.listener.FlyListener;
+import net.urbanmc.treasurehunter.listener.GodListener;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.runnable.StartTask;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Level;
 
 public class TreasureHunter extends JavaPlugin {
 
-	private boolean isError = false;
 	private static Essentials essentials;
+	private boolean isError;
+
+	public static Essentials getEssentials() {
+		return essentials;
+	}
 
 	@Override
 	public void onEnable() {
+		if (!checkDependencies())
+			return;
+
 		initializeManagers();
 
 		registerListeners();
 		registerCommand();
 
-		checkEssentials();
-
 		if (isError) { // The manager class should print the error reason
 			getLogger().info("Cannot start task due to errors.");
-			return;
+		} else {
+			start();
 		}
-
-		start();
 	}
 
 	@Override
@@ -44,6 +48,7 @@ public class TreasureHunter extends JavaPlugin {
 	 * If there are any errors, we will not start the task.
 	 */
 	private void initializeManagers() {
+		isError = false;
 		ConfigManager.checkError(this);
 	}
 
@@ -65,19 +70,17 @@ public class TreasureHunter extends JavaPlugin {
 		new StartTask(this);
 	}
 
-	private void checkEssentials() {
-		if(Bukkit.getServer().getPluginManager().getPlugin("Essentials") == null) {
-			getLogger().log(Level.SEVERE, "Essentials needed for Treasure Hunter!");
+	private boolean checkDependencies() {
+		essentials = getPlugin(Essentials.class);
+		Plugin temp = getPlugin(RandomTP.class);
 
-			Bukkit.getServer().getPluginManager().disablePlugin(this);
+		if (essentials == null || temp == null) {
+			getLogger().severe("Essentials and RandomTP are needed for Treasure Hunter! Disabling plugin..");
+			setEnabled(false);
 
-			return;
+			return false;
+		} else {
+			return true;
 		}
-
-		essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
-	}
-
-	public static Essentials getEssentials() {
-		return essentials;
 	}
 }

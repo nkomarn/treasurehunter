@@ -1,4 +1,4 @@
-package net.urbanmc.treasurehunter.listeners;
+package net.urbanmc.treasurehunter.listener;
 
 import net.ess3.api.events.GodStatusChangeEvent;
 import net.urbanmc.treasurehunter.TreasureHunter;

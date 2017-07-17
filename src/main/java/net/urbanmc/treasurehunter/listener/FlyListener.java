@@ -1,6 +1,5 @@
-package net.urbanmc.treasurehunter.listeners;
+package net.urbanmc.treasurehunter.listener;
 
-import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.event.EventHandler;

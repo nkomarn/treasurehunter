@@ -3,6 +3,7 @@ package net.urbanmc.treasurehunter.manager;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
+import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import net.urbanmc.treasurehunter.util.ItemUtil;
 import org.apache.commons.io.IOUtils;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 public class ItemManager {
 
@@ -27,15 +29,28 @@ public class ItemManager {
 
 	private ItemManager() {
 		createFile();
-
-		FileConfiguration data = YamlConfiguration.loadConfiguration(FILE);
-
-		loadPercentages(data);
-		loadItems(data);
 	}
 
 	public static ItemManager getInstance() {
 		return instance;
+	}
+
+	public void checkError(TreasureHunter plugin) {
+		FileConfiguration data = YamlConfiguration.loadConfiguration(FILE);
+
+		try {
+			loadPercentages(data);
+		} catch (Exception e) {
+			plugin.getLogger().log(Level.SEVERE, "Error loading percentages!", e);
+			plugin.error();
+		}
+
+		try {
+			loadItems(data);
+		} catch (Exception e) {
+			plugin.getLogger().log(Level.SEVERE, "Error loading items!", e);
+			plugin.error();
+		}
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
@@ -65,6 +80,9 @@ public class ItemManager {
 
 		for (TreasureChestType type : TreasureChestType.values()) {
 			double chance = data.getDouble("percentages." + type.name().toLowerCase());
+
+			if (chance == 0)
+				continue;
 
 			Range<Double> range = Range.closedOpen(lowerBound, lowerBound + chance);
 

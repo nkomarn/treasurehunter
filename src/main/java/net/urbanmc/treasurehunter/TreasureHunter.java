@@ -7,6 +7,7 @@ import net.urbanmc.treasurehunter.listener.CompassListener;
 import net.urbanmc.treasurehunter.listener.FlyListener;
 import net.urbanmc.treasurehunter.listener.GodListener;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
+import net.urbanmc.treasurehunter.manager.ItemManager;
 import net.urbanmc.treasurehunter.runnable.StartTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -49,6 +50,8 @@ public class TreasureHunter extends JavaPlugin {
 	 */
 	private void initializeManagers() {
 		isError = false;
+
+		ItemManager.getInstance().checkError(this);
 		ConfigManager.checkError(this);
 	}
 

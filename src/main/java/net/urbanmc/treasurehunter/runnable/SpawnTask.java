@@ -35,6 +35,8 @@ public class SpawnTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
+		TreasureChestManager.getInstance().removeCurrentChest();
+
 		Location loc = randomLocation();
 
 		if (loc == null) {
@@ -48,7 +50,7 @@ public class SpawnTask extends BukkitRunnable {
 
 		TreasureChest chest = new TreasureChest(type, b);
 
-		TreasureChestManager.getInstance().setCurentChest(chest);
+		TreasureChestManager.getInstance().setCurrentChest(chest);
 
 		b.setType(Material.CHEST);
 

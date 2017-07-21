@@ -3,3 +3,7 @@
 
 # TreasureHunter only runs in one normal world! (not nether or end)
 world: 'world'
+
+# So you've configured everything. Change this thingy from false to true and we can get you started!
+# This is to prevent items you don't want being spawned in your world before you've configured the plugin.
+ready: false

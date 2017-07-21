@@ -3,16 +3,20 @@ package net.urbanmc.treasurehunter.runnable;
 import net.urbanmc.randomtp.Util;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
+import net.urbanmc.treasurehunter.manager.ItemManager;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
 public class SpawnTask extends BukkitRunnable {
 
@@ -38,11 +42,24 @@ public class SpawnTask extends BukkitRunnable {
 			return;
 		}
 
+		Block b = loc.getBlock();
+
 		TreasureChestType type = randomType();
 
-		TreasureChest chest = new TreasureChest(type, loc.getBlock());
+		TreasureChest chest = new TreasureChest(type, b);
 
 		TreasureChestManager.getInstance().setCurentChest(chest);
+
+		b.setType(Material.CHEST);
+
+		Chest c = (Chest) b.getState();
+
+		List<ItemStack> items = getItems(type);
+
+		ItemStack[] itemArray = new ItemStack[items.size()];
+		itemArray = items.toArray(itemArray);
+
+		c.getBlockInventory().addItem(itemArray);
 	}
 
 	private Location randomLocation() {
@@ -52,8 +69,10 @@ public class SpawnTask extends BukkitRunnable {
 	}
 
 	private TreasureChestType randomType() {
-		Random r = ThreadLocalRandom.current();
+		return ItemManager.getInstance().randomChestType();
+	}
 
-		return null;
+	private List<ItemStack> getItems(TreasureChestType type) {
+		return ItemManager.getInstance().getItemsForChestType(type);
 	}
 }

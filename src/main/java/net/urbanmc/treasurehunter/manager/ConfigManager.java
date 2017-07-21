@@ -33,6 +33,13 @@ public class ConfigManager {
 			plugin.getLogger().severe("World is not loaded! Cannot start without a properly loaded world!");
 			plugin.error();
 		}
+
+		if (!getConfig().getBoolean("ready")) {
+			plugin.getLogger().severe("The config file has not been properly edited! Please make sure all " +
+					                          "configurations are to your liking, and change \"ready\" to true in " +
+					                          "config.yml.");
+			plugin.error();
+		}
 	}
 
 	public static FileConfiguration getConfig() {

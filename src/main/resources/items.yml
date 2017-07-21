@@ -1,0 +1,28 @@
+# Treasure Hunter Item Configuration #
+######################################
+
+# There are 4 types of chests: Common, Rare, Epic, Legendary
+# Each must have a percentage of dropping that must equal 100
+# Please make sure it equals 100% and please don't put % at the end
+# You can even set one to 0 to disable it altogether
+
+percentages:
+  common: 55
+  rare: 25
+  epic: 13.5
+  legendary: 6.5
+
+# Great! We've got the percentages set up. Now we have to determine what exactly will be in these chests
+
+items:
+  common:
+  - 'diamond_sword enchant:sharpness/3 enchant:looting'
+  - 'obsidian amount:2'
+  rare:
+  - 'diamond_sword enchant:sharpness/3 enchant:looting'
+  - 'diamond_chestplate enchant:protection/4'
+  epic:
+  - 'diamond_sword enchant:damage_all/3 enchant:looting'
+  - 'diamond_chestplate enchant:protection/4'
+  legendary:
+  - 'diamond_sword name:God_Sword enchant:damage_all/100 durability:1'

@@ -1,6 +1,5 @@
 TODO:
 - Add listeners for pvp.
 - Broadcast starting message.
-- Make chest have items, create chest files.
-- Make chest randomizer
 - Broadcast end messages, make chest disappear
+- Percentages command to show percentages to players

@@ -1,12 +1,10 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
-import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
 import net.urbanmc.treasurehunter.object.TreasureChest;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

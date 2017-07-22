@@ -4,6 +4,7 @@ import net.urbanmc.randomtp.Util;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.ItemManager;
+import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
@@ -60,6 +61,8 @@ public class SpawnTask extends BukkitRunnable {
 		itemArray = items.toArray(itemArray);
 
 		c.getBlockInventory().addItem(itemArray);
+
+		Bukkit.broadcastMessage(Messages.getString("hunting.new-chest", type.toString()));
 	}
 
 	private Location randomLocation() {

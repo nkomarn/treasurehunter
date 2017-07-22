@@ -1,5 +1,4 @@
 TODO:
 - Add listeners for pvp.
-- Broadcast starting message.
 - Broadcast end messages, make chest disappear
-- Percentages command to show percentages to players
+- Percentages command to show percentages to players (created; double check to make sure it looks good).

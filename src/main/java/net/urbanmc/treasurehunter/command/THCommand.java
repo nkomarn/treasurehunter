@@ -2,6 +2,7 @@ package net.urbanmc.treasurehunter.command;
 
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.command.subcommands.CancelSub;
+import net.urbanmc.treasurehunter.command.subcommands.ChestsSub;
 import net.urbanmc.treasurehunter.command.subcommands.SpawnSub;
 import net.urbanmc.treasurehunter.command.subcommands.StartSub;
 import net.urbanmc.treasurehunter.manager.Messages;
@@ -29,6 +30,7 @@ public class THCommand implements CommandExecutor {
         subList.add(new StartSub());
         subList.add(new SpawnSub(plugin));
         subList.add(new CancelSub());
+        subList.add(new ChestsSub());
     }
 
 

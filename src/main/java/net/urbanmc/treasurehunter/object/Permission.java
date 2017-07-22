@@ -5,7 +5,8 @@ public enum Permission {
     COMMAND_BASE ("command"),
     START_SUB ("start"),
     SPAWN_SUB ("spawn"),
-    CANCEL_SUB ("cancel");
+    CANCEL_SUB ("cancel"),
+    CHESTS_SUB("chests");
 
 
 

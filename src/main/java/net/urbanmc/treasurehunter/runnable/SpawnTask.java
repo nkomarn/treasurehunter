@@ -36,6 +36,8 @@ public class SpawnTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
+		TreasureChestManager.getInstance().removeCurrentChest();
+
 		Location loc = randomLocation();
 
 		if (loc == null) {
@@ -49,7 +51,7 @@ public class SpawnTask extends BukkitRunnable {
 
 		TreasureChest chest = new TreasureChest(type, b);
 
-		TreasureChestManager.getInstance().setCurentChest(chest);
+		TreasureChestManager.getInstance().setCurrentChest(chest);
 
 		b.setType(Material.CHEST);
 
@@ -62,7 +64,7 @@ public class SpawnTask extends BukkitRunnable {
 
 		c.getBlockInventory().addItem(itemArray);
 
-		Bukkit.broadcastMessage(Messages.getString("hunting.new-chest", type.toString()));
+		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.toString()));
 	}
 
 	private Location randomLocation() {

@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.urbanmc.treasurehunter.gson.TreasureChestSerializer;
 import net.urbanmc.treasurehunter.object.TreasureChest;
-import net.urbanmc.treasurehunter.object.TreasureChestList;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Material;
+import org.bukkit.block.Chest;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -21,7 +20,7 @@ public class TreasureChestManager {
 	private final Gson gson =
 			new GsonBuilder().registerTypeAdapter(TreasureChest.class, new TreasureChestSerializer()).create();
 
-	private List<TreasureChest> chest;
+	private TreasureChest chest;
 
 	private TreasureChestManager() {
 		createFile();
@@ -56,27 +55,46 @@ public class TreasureChestManager {
 		try {
 			Scanner scanner = new Scanner(FILE);
 
-			chest = gson.fromJson(scanner.nextLine(), TreasureChestList.class).getChest();
+			chest = gson.fromJson(scanner.nextLine(), TreasureChest.class);
 
 			scanner.close();
 		} catch (Exception e) {
 			if (!(e instanceof NoSuchElementException)) {
 				e.printStackTrace();
 			}
+		}
+	}
 
-			chest = new ArrayList<>();
+	private void saveChest() {
+		try {
+			PrintWriter writer = new PrintWriter(FILE);
+
+			writer.write(gson.toJson(chest));
+
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public TreasureChest getCurrentChest() {
-		return chest.isEmpty() ? null : chest.get(0);
+		return chest;
 	}
 
-	public void setCurentChest(TreasureChest treasureChest) {
-		if (!chest.isEmpty()) {
-			chest.remove(0);
-		}
+	public void setCurrentChest(TreasureChest treasureChest) {
+		chest = treasureChest;
+		saveChest();
+	}
 
-		chest.add(treasureChest);
+	public void removeCurrentChest() {
+		if (getCurrentChest() == null)
+			return;
+
+		Chest c = (Chest) getCurrentChest().getBlock().getState();
+
+		c.getBlockInventory().clear();
+		c.setType(Material.AIR);
+
+		saveChest();
 	}
 }

@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.listener;
 
+import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,9 @@ public class FlyListener implements Listener{
             return;
 
         if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getPlayer()))
+            return;
+
+        if(!ConfigManager.getConfig().getBoolean("disable-fly"))
             return;
 
         e.getPlayer().setFlying(false);

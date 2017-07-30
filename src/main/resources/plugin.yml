@@ -9,3 +9,7 @@ commands:
   treasurehunter:
     description: TreasureHunter command
     aliases: [th]
+
+permissions:
+  treasurehunter.command:
+    default: true

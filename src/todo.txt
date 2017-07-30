@@ -1,4 +1,4 @@
 TODO:
-- Add listeners for pvp.
-- Broadcast end messages, make chest disappear
+- Add listeners for pvp. (Idk what we're gonna use this for since god and fly are disabled).
+- Broadcast end messages, make chest disappear (in the interact listener).
 - Percentages command to show percentages to players (created; double check to make sure it looks good).

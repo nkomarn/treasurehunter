@@ -34,6 +34,7 @@ public class CancelSub extends SubCommand{
 
         chest.getHunting().remove(p.getUniqueId());
 
+        if(p.getInventory().contains(StartSub.compass))
         p.getInventory().remove(StartSub.compass);
 
         p.setCompassTarget(p.getWorld().getSpawnLocation());

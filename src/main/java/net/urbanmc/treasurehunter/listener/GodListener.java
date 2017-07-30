@@ -2,6 +2,7 @@ package net.urbanmc.treasurehunter.listener;
 
 import net.ess3.api.events.GodStatusChangeEvent;
 import net.urbanmc.treasurehunter.TreasureHunter;
+import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,9 @@ public class GodListener implements Listener{
             return;
 
         if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getAffected().getBase()))
+            return;
+
+        if(!ConfigManager.getConfig().getBoolean("disable-god"))
             return;
 
         TreasureHunter.getEssentials().getUser(e.getAffected().getBase()).setGodModeEnabled(false);

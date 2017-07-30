@@ -1,10 +1,7 @@
 package net.urbanmc.treasurehunter.command;
 
 import net.urbanmc.treasurehunter.TreasureHunter;
-import net.urbanmc.treasurehunter.command.subcommands.CancelSub;
-import net.urbanmc.treasurehunter.command.subcommands.ChestsSub;
-import net.urbanmc.treasurehunter.command.subcommands.SpawnSub;
-import net.urbanmc.treasurehunter.command.subcommands.StartSub;
+import net.urbanmc.treasurehunter.command.subcommands.*;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
@@ -27,10 +24,11 @@ public class THCommand implements CommandExecutor {
     }
 
     private void registerSubs() {
-        subList.add(new StartSub());
+        subList.add(new StartSub(plugin));
         subList.add(new SpawnSub(plugin));
         subList.add(new CancelSub());
         subList.add(new ChestsSub());
+        subList.add(new TpSub());
     }
 
 
@@ -43,7 +41,13 @@ public class THCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            sendPropMessage(sender, "command.base.help");
+
+            if(sender.hasPermission(Permission.ADMIN.toString()))
+                sendPropMessage(sender, "command.base.help.admin");
+
+            else
+                sendPropMessage(sender, "command.base.help.default");
+
             return true;
         }
 

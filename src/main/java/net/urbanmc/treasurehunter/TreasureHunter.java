@@ -6,12 +6,16 @@ import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.CompassListener;
 import net.urbanmc.treasurehunter.listener.FlyListener;
 import net.urbanmc.treasurehunter.listener.GodListener;
+import net.urbanmc.treasurehunter.listener.InteractListener;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.ItemManager;
 import net.urbanmc.treasurehunter.runnable.StartTask;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.xml.bind.Marshaller;
 
 public class TreasureHunter extends JavaPlugin {
 
@@ -60,9 +64,14 @@ public class TreasureHunter extends JavaPlugin {
 	}
 
 	private void registerListeners() {
-		Bukkit.getPluginManager().registerEvents(new CompassListener(), this);
-		Bukkit.getPluginManager().registerEvents(new FlyListener(), this);
-		Bukkit.getPluginManager().registerEvents(new GodListener(), this);
+		registerListener(new CompassListener());
+		registerListener(new FlyListener());
+		registerListener(new GodListener());
+		registerListener(new InteractListener());
+	}
+
+	private void registerListener(Listener l) {
+		Bukkit.getPluginManager().registerEvents(l, this);
 	}
 
 	private void registerCommand() {

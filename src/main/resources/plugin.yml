@@ -24,6 +24,7 @@ permissions:
       treasurehunter.default: true
       treasuhunter.tp: false
       treasurehunter.spawn: false
+      treasurehunter.reload: false
   treasurehunter.command:
     default: false
   treasurehunter.start:
@@ -35,4 +36,6 @@ permissions:
   treasurehunter.tp:
       default: false
   treasurehunter.spawn:
+      default: false
+  treasurehunter.reload:
       default: false

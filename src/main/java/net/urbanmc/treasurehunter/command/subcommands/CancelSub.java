@@ -11,18 +11,12 @@ import org.bukkit.entity.Player;
 public class CancelSub extends SubCommand{
 
     public CancelSub() {
-        super("cancel", Permission.CANCEL_SUB, true);
+        super("cancel", Permission.CANCEL_SUB, true, true);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         //Todo Allows the player to cancel. Takes away their compass. They cannot start the hunt again.
-
-        if(TreasureChestManager.getInstance().getCurrentChest() == null) {
-            sender.sendMessage(Messages.getString("command.no-chest"));
-            return;
-        }
-
         TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
 
         Player p = (Player) sender;

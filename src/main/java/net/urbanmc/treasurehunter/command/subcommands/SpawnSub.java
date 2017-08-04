@@ -12,7 +12,7 @@ public class SpawnSub extends SubCommand{
     private TreasureHunter plugin;
 
     public SpawnSub(TreasureHunter plugin) {
-        super("spawn", Permission.SPAWN_SUB, false);
+        super("spawn", Permission.SPAWN_SUB, false, false);
         this.plugin = plugin;
     }
 

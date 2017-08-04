@@ -8,7 +8,8 @@ public enum Permission {
     CANCEL_SUB ("cancel"),
     CHESTS_SUB("chests"),
     TP_SUB("tp"),
-    ADMIN("admin");
+    ADMIN("admin"),
+    RELOAD("reload");
 
     private String permission;
 

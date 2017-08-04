@@ -8,10 +8,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.util.List;
 
 public class ConfigManager {
 
 	private static ConfigManager instance = new ConfigManager();
+
+	private List<String> blockedcmds;
 
 	private final File FILE = new File("plugins/TreasureHunter", "config.yml");
 	private FileConfiguration data;
@@ -70,7 +73,37 @@ public class ConfigManager {
 		data = YamlConfiguration.loadConfiguration(FILE);
 	}
 
+	public void reloadConfig() {
+		data = YamlConfiguration.loadConfiguration(FILE);
+
+		blockedcmds = getConfig().getStringList("blocked-commands");
+
+		if(ConfigManager.getConfig().getBoolean("disable-god") && !blockedcmds.contains("/god"))
+			blockedcmds.add("/god");
+
+		if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockedcmds.contains("/fly"))
+			blockedcmds.add("/fly");
+	}
+
 	private FileConfiguration getData() {
 		return data;
+	}
+
+	public List<String> getblckedCmds() {
+		if(blockedcmds == null) {
+			blockedcmds = getConfig().getStringList("blocked-commands");
+
+			if(ConfigManager.getConfig().getBoolean("disable-god") && !blockedcmds.contains("/god"))
+				blockedcmds.add("/god");
+
+			if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockedcmds.contains("/fly"))
+				blockedcmds.add("/fly");
+		}
+
+		return blockedcmds;
+	}
+
+	public static ConfigManager getInstance() {
+		return instance;
 	}
 }

@@ -11,7 +11,7 @@ public class ChestsSub extends SubCommand{
 
 
     public ChestsSub() {
-        super("chests", Permission.CHESTS_SUB, false);
+        super("chests", Permission.CHESTS_SUB, false, false);
     }
 
     @Override

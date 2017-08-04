@@ -20,22 +20,14 @@ public class CommandListener implements Listener{
         if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getPlayer()))
             return;
 
-        List<String> blockcmds = ConfigManager.getConfig().getStringList("blocked-commands");
-
-        if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockcmds.contains("/fly"))
-            blockcmds.add("/fly");
-
-        if(ConfigManager.getConfig().getBoolean("disable-god") && !blockcmds.contains("/god"))
-            blockcmds.add("/fly");
-
-        if(blockcmds.isEmpty())
+        if(ConfigManager.getInstance().getblckedCmds().isEmpty())
             return;
 
         String label = e.getMessage().split(" ")[0];
 
         boolean cancel = false;
 
-        for(String command : ConfigManager.getConfig().getStringList("blocked-commands"))
+        for(String command : ConfigManager.getInstance().getblckedCmds())
         {
             if(!command.contains(" ") && command.equalsIgnoreCase(label)) {
                 cancel = true;

@@ -11,16 +11,11 @@ public class TpSub extends SubCommand{
 
 
     public TpSub() {
-        super("teleport", Permission.TP_SUB, true, "tp");
+        super("teleport", Permission.TP_SUB, true, true, "tp");
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
-        if(TreasureChestManager.getInstance().getCurrentChest() == null) {
-            sendPropMessage(sender, "command.no-chest");
-            return;
-        }
 
         Location loc = TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation();
 

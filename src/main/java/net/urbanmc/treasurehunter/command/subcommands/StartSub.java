@@ -25,7 +25,7 @@ public class StartSub extends SubCommand{
     private TreasureHunter plugin;
 
     public StartSub(TreasureHunter plugin) {
-        super("start", Permission.START_SUB, true);
+        super("start", Permission.START_SUB, true, false);
 
         this.plugin = plugin;
 
@@ -45,11 +45,6 @@ public class StartSub extends SubCommand{
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
-        if(TreasureChestManager.getInstance().getCurrentChest() == null) {
-            sendPropMessage(sender,"command.no-chest");
-            return;
-        }
 
         TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
         Player p = (Player) sender;
@@ -105,14 +100,8 @@ public class StartSub extends SubCommand{
     private String buildWarnMessage() {
         StringBuilder blocked = new StringBuilder();
 
-        if(ConfigManager.getConfig().getBoolean("disable-fly"))
-            blocked.append("\n").append("- /fly");
-
-        if(ConfigManager.getConfig().getBoolean("disable-god"))
-            blocked.append("\n").append("- /god");
-
-        if(!ConfigManager.getConfig().getStringList("blocked-commands").isEmpty())
-            for(String command : ConfigManager.getConfig().getStringList("blocked-commands"))
+        if(ConfigManager.getInstance().getblckedCmds().isEmpty())
+            for(String command : ConfigManager.getInstance().getblckedCmds())
             blocked.append("\n").append("- /").append(command);
 
         return blocked.toString();

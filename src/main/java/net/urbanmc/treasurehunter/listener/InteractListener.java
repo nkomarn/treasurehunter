@@ -28,7 +28,6 @@ public class InteractListener implements Listener{
 
         Bukkit.broadcastMessage(Messages.getString("broadcast.found", e.getPlayer().getDisplayName(), TreasureChestManager.getInstance().getCurrentChest().getType().toString()));
 
-
         //Well Idk if you want to leave the chest or make it when they click the chest, it vanishes and all the items drop on the ground.
         TreasureChestManager.getInstance().setCurrentChest(null);
 

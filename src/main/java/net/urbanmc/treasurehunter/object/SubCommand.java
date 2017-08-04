@@ -1,6 +1,7 @@
 package net.urbanmc.treasurehunter.object;
 
 import net.urbanmc.treasurehunter.manager.Messages;
+import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,11 +12,13 @@ public abstract class SubCommand {
     private Permission perm;
     private boolean isPlayerOnly;
     private String alias;
+    private boolean chestNeeded;
 
-    public SubCommand(String sub, Permission perm, boolean playerOnly, String... alias) {
+    public SubCommand(String sub, Permission perm, boolean playerOnly, boolean chestNeeded, String... alias) {
         this.sub = sub;
         this.perm = perm;
         this.isPlayerOnly = playerOnly;
+        this.chestNeeded = chestNeeded;
 
         if(alias != null)
             this.alias = alias[0];
@@ -30,6 +33,11 @@ public abstract class SubCommand {
 
         if(!sender.hasPermission(perm.toString())) {
             sendPropMessage(sender, "command.no-perm");
+            return;
+        }
+
+        if(chestNeeded && TreasureChestManager.getInstance().getCurrentChest() == null) {
+            sendPropMessage(sender, "command.no-chest");
             return;
         }
 

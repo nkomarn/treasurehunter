@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.List;
+
 public class CommandListener implements Listener{
 
     @EventHandler
@@ -18,7 +20,15 @@ public class CommandListener implements Listener{
         if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getPlayer()))
             return;
 
-        if(ConfigManager.getConfig().getStringList("blocked-commands").isEmpty())
+        List<String> blockcmds = ConfigManager.getConfig().getStringList("blocked-commands");
+
+        if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockcmds.contains("/fly"))
+            blockcmds.add("/fly");
+
+        if(ConfigManager.getConfig().getBoolean("disable-god") && !blockcmds.contains("/god"))
+            blockcmds.add("/fly");
+
+        if(blockcmds.isEmpty())
             return;
 
         String label = e.getMessage().split(" ")[0];

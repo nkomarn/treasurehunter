@@ -4,16 +4,13 @@
 # TreasureHunter only runs in one normal world! (not nether or end)
 world: 'world'
 
-#While hunting the treasure, by default, players won't be able to fly or use /god. You can disable this by setting either options to false;
+# While hunting the treasure, by default, players won't be able to fly or use /god.
+# You can disable this by setting either options to false;
 disable-fly: true
 disable-god: true
 
-#Blocked Commands. What commands should not be allowed while treasure hunting?
-blocked-commands:
--tpa
--tpaccept
--tpyes
--marry sethome
+# Blocked Commands. What commands should not be allowed while treasure hunting?
+blocked-commands: [tpaccept, tpyes, etpaccept, etpyes, tpahere, etpahere, marry sethome, pwarps]
 
 # So you've configured everything. Change this thingy from false to true and we can get you started!
 # This is to prevent items you don't want being spawned in your world before you've configured the plugin.

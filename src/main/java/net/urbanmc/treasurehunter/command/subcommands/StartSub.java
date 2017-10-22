@@ -16,94 +16,77 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class StartSub extends SubCommand{
+public class StartSub extends SubCommand {
 
-    private List<UUID> warned = new ArrayList<>();
+	public static ItemStack compass;
+	private List<UUID> warned = new ArrayList<>();
+	private TreasureHunter plugin;
 
-    public static ItemStack compass;
+	public StartSub(TreasureHunter plugin) {
+		super("start", Permission.START_SUB, true, false);
 
-    private TreasureHunter plugin;
+		this.plugin = plugin;
 
-    public StartSub(TreasureHunter plugin) {
-        super("start", Permission.START_SUB, true, false);
+		createCompass();
+	}
 
-        this.plugin = plugin;
+	private void createCompass() {
+		compass = new ItemStack(Material.COMPASS, 1);
 
-        createCompass();
-    }
+		ItemMeta meta = compass.getItemMeta();
 
-    private void createCompass() {
-        compass = new ItemStack(Material.COMPASS, 1);
+		meta.setDisplayName(Messages.getString("compass.name"));
+		meta.setLore(Collections.singletonList(Messages.getString("compass.desc")));
 
-        ItemMeta meta = compass.getItemMeta();
+		compass.setItemMeta(meta);
+	}
 
-        meta.setDisplayName(Messages.getString("compass.name"));
-        meta.setLore(Collections.singletonList(Messages.getString("compass.desc")));
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
+		Player p = (Player) sender;
 
-        compass.setItemMeta(meta);
-    }
+		if (chest.getCancelled().contains(p.getUniqueId())) {
+			sendPropMessage(p, "command.start.cancelled");
+			return;
+		}
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
+		if (chest.isHunting(p)) {
+			sendPropMessage(p, "command.start.hunting");
+		}
 
-        TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
-        Player p = (Player) sender;
+		if (!warned.contains(p.getUniqueId())) {
+			p.sendMessage(Messages.getString("command.start.warning"));
 
-        if(chest.getCancelled().contains(p.getUniqueId())) {
-            sendPropMessage(sender, "command.start.cancelled");
-            return;
-        }
+			warned.add(p.getUniqueId());
 
-        if(chest.getHunting().contains(p.getUniqueId())) {
+			timeOut(p.getUniqueId());
+			return;
+		}
 
-            if(p.getInventory().contains(compass)) {
-                sendPropMessage(sender, "command.start.hunting");
-                return;
-            }
+		warned.remove(p.getUniqueId());
 
-            p.getInventory().addItem(compass.clone());
+		chest.getHunting().add(p.getUniqueId());
 
-            return;
-        }
+		sendPropMessage(p, "command.start.start-hunt");
 
-        if(!warned.contains(p.getUniqueId())) {
-            p.sendMessage(Messages.getString("command.start.warning", buildWarnMessage()));
+		p.getInventory().addItem(compass.clone());
 
-            warned.add(p.getUniqueId());
+		p.setCompassTarget(chest.getBlock().getLocation());
 
-            timeOut(p.getUniqueId());
-            return;
-        }
+		if (ConfigManager.getConfig().getBoolean("disable-fly")) {
+			p.setFlying(false);
+		}
 
-        warned.remove(p.getUniqueId());
+		if (ConfigManager.getConfig().getBoolean("disable-god")) {
+			TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
+		}
+	}
 
-        chest.getHunting().add(p.getUniqueId());
-
-        sendPropMessage(sender, "command.start.start-hunt");
-
-        p.getInventory().addItem(compass.clone());
-
-        if(ConfigManager.getConfig().getBoolean("disable-fly"))
-        p.setFlying(false);
-
-        if(ConfigManager.getConfig().getBoolean("disable-god"))
-        TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
-    }
-
-    private void timeOut(UUID p) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if(warned.contains(p))
-                warned.remove(p);
-        }, 500);
-    }
-
-    private String buildWarnMessage() {
-        StringBuilder blocked = new StringBuilder();
-
-        if(ConfigManager.getInstance().getblckedCmds().isEmpty())
-            for(String command : ConfigManager.getInstance().getblckedCmds())
-            blocked.append("\n").append("- /").append(command);
-
-        return blocked.toString();
-    }
+	private void timeOut(UUID p) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			if (warned.contains(p))
+				warned.remove(p);
+		}, 500);
+	}
 }

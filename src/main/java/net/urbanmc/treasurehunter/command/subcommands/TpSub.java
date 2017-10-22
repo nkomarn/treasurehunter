@@ -7,22 +7,21 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TpSub extends SubCommand{
+public class TpSub extends SubCommand {
 
 
-    public TpSub() {
-        super("teleport", Permission.TP_SUB, true, true, "tp");
-    }
+	public TpSub() {
+		super("teleport", Permission.TP_SUB, true, true, "tp");
+	}
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		Location loc = TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation();
 
-        Location loc = TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation();
+		loc.add(0, 2, 0);
 
-        loc.add(0, 2, 0);
+		((Player) sender).teleport(loc);
 
-        ((Player) sender).teleport(loc);
-
-        sendPropMessage(sender, "command.tp");
-    }
+		sendPropMessage(sender, "command.tp");
+	}
 }

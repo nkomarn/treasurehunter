@@ -1,6 +1,8 @@
 package net.urbanmc.treasurehunter.object;
 
+import net.urbanmc.treasurehunter.manager.Messages;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ public class TreasureChest {
 	private TreasureChestType type;
 	private Block block;
 	private List<UUID> hunting, cancelled;
+	private boolean found;
 
 	public TreasureChest(TreasureChestType type, Block block) {
 		this.type = type;
@@ -31,11 +34,27 @@ public class TreasureChest {
 		return hunting;
 	}
 
+	public boolean isHunting(Player p) {
+		return hunting.contains(p.getUniqueId());
+	}
+
 	public List<UUID> getCancelled() {
 		return cancelled;
 	}
 
+	public boolean isFound() {
+		return found;
+	}
+
+	public void setFound() {
+		this.found = true;
+	}
+
 	public enum TreasureChestType {
-		COMMON, RARE, EPIC, LEGENDARY
+		COMMON, RARE, EPIC, LEGENDARY;
+
+		public String getDisplayName() {
+			return Messages.getString("chest." + name().toLowerCase());
+		}
 	}
 }

@@ -5,27 +5,30 @@ import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class GodListener implements Listener{
+public class GodListener implements Listener {
 
-    @EventHandler
-    public void onGodEnable(GodStatusChangeEvent e) {
-        if(TreasureChestManager.getInstance().getCurrentChest() == null)
-            return;
+	@EventHandler
+	public void onGodEnable(GodStatusChangeEvent e) {
+		if (TreasureChestManager.getInstance().getCurrentChest() == null)
+			return;
 
-        if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getAffected().getBase()))
-            return;
+		Player p = e.getAffected().getBase();
 
-        if(!ConfigManager.getConfig().getBoolean("disable-god"))
-            return;
+		if (!TreasureChestManager.getInstance().getCurrentChest().isHunting(p))
+			return;
 
-        TreasureHunter.getEssentials().getUser(e.getAffected().getBase()).setGodModeEnabled(false);
+		if (!ConfigManager.getConfig().getBoolean("disable-god"))
+			return;
 
-        e.getAffected().sendMessage(Messages.getString("hunting.no-god"));
+		TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
 
-        e.setCancelled(true);
-    }
+		p.sendMessage(Messages.getString("hunting.no-god"));
+
+		e.setCancelled(true);
+	}
 
 }

@@ -15,71 +15,69 @@ import java.util.ArrayList;
 
 public class THCommand implements CommandExecutor {
 
-    private ArrayList<SubCommand> subList;
-    private TreasureHunter plugin;
+	private ArrayList<SubCommand> subList = new ArrayList<>();
+	private TreasureHunter plugin;
 
-    public THCommand(TreasureHunter plugin) {
-        this.plugin = plugin;
-        registerSubs();
-    }
+	public THCommand(TreasureHunter plugin) {
+		this.plugin = plugin;
+		registerSubs();
+	}
 
-    private void registerSubs() {
-        subList.add(new StartSub(plugin));
-        subList.add(new SpawnSub(plugin));
-        subList.add(new CancelSub());
-        subList.add(new ChestsSub());
-        subList.add(new TpSub());
-        subList.add(new ReloadSub());
-    }
+	private void registerSubs() {
+		subList.add(new StartSub(plugin));
+		subList.add(new SpawnSub(plugin));
+		subList.add(new CancelSub());
+		subList.add(new ChestsSub());
+		subList.add(new TpSub());
+		subList.add(new ReloadSub());
+	}
 
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (!sender.hasPermission(Permission.COMMAND_BASE.toString())) {
+			sendPropMessage(sender, "command.no-perm");
+			return true;
+		}
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (args.length == 0) {
 
-        if (!sender.hasPermission(Permission.COMMAND_BASE.toString())) {
-            sendPropMessage(sender, "command.no-perm");
-            return true;
-        }
+			if (sender.hasPermission(Permission.ADMIN.toString()))
+				sendPropMessage(sender, "command.base.help.admin");
 
-        if (args.length == 0) {
+			else
+				sendPropMessage(sender, "command.base.help.default");
 
-            if(sender.hasPermission(Permission.ADMIN.toString()))
-                sendPropMessage(sender, "command.base.help.admin");
+			return true;
+		}
 
-            else
-                sendPropMessage(sender, "command.base.help.default");
+		SubCommand sub = matchSub(args[0]);
 
-            return true;
-        }
+		if (sub == null) {
+			sendPropMessage(sender, "command.invalid-sub");
+			return true;
+		}
 
-        SubCommand sub = matchSub(args[0]);
+		sub.preCommand(sender, args);
 
-        if (sub == null) {
-            sendPropMessage(sender, "command.invalid-sub");
-            return true;
-        }
-
-        sub.preCommand(sender, args);
-
-        return true;
-    }
+		return true;
+	}
 
 
-    public void sendPropMessage(CommandSender sender, String property) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Messages.getString(property));
-            return;
-        }
+	private void sendPropMessage(CommandSender sender, String property) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(Messages.getString(property));
+			return;
+		}
 
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Messages.getString(property)));
-    }
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Messages.getString(property)));
+	}
 
-    private SubCommand matchSub(String args0) {
+	private SubCommand matchSub(String args0) {
+		for (SubCommand sub : subList) {
+			if (sub.matchSub(args0))
+				return sub;
+		}
 
-        for(SubCommand sub : subList)
-            if(sub.matchSub(args0))
-                return sub;
-
-        return null;
-    }
+		return null;
+	}
 }

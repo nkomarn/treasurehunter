@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,7 +64,7 @@ public class ItemManager {
 			try {
 				FILE.createNewFile();
 
-				InputStream input = getClass().getClassLoader().getResourceAsStream("config.yml");
+				InputStream input = getClass().getClassLoader().getResourceAsStream("items.yml");
 				OutputStream output = new FileOutputStream(FILE);
 
 				IOUtils.copy(input, output);
@@ -93,6 +94,8 @@ public class ItemManager {
 	}
 
 	private void loadItems(FileConfiguration data) {
+		itemMap = new HashMap<>();
+
 		for (TreasureChestType type : TreasureChestType.values()) {
 			List<String> itemStringList = data.getStringList("items." + type.name().toLowerCase());
 			List<ItemStack> items = ItemUtil.getItemList(itemStringList);

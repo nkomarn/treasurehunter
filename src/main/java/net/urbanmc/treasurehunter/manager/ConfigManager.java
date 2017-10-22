@@ -14,8 +14,6 @@ public class ConfigManager {
 
 	private static ConfigManager instance = new ConfigManager();
 
-	private List<String> blockedcmds;
-
 	private final File FILE = new File("plugins/TreasureHunter", "config.yml");
 	private FileConfiguration data;
 
@@ -49,6 +47,10 @@ public class ConfigManager {
 		return instance.getData();
 	}
 
+	public static ConfigManager getInstance() {
+		return instance;
+	}
+
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private void createFile() {
 		if (!FILE.getParentFile().exists()) {
@@ -75,35 +77,13 @@ public class ConfigManager {
 
 	public void reloadConfig() {
 		data = YamlConfiguration.loadConfiguration(FILE);
-
-		blockedcmds = getConfig().getStringList("blocked-commands");
-
-		if(ConfigManager.getConfig().getBoolean("disable-god") && !blockedcmds.contains("/god"))
-			blockedcmds.add("/god");
-
-		if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockedcmds.contains("/fly"))
-			blockedcmds.add("/fly");
 	}
 
 	private FileConfiguration getData() {
 		return data;
 	}
 
-	public List<String> getblckedCmds() {
-		if(blockedcmds == null) {
-			blockedcmds = getConfig().getStringList("blocked-commands");
-
-			if(ConfigManager.getConfig().getBoolean("disable-god") && !blockedcmds.contains("/god"))
-				blockedcmds.add("/god");
-
-			if(ConfigManager.getConfig().getBoolean("disable-fly") && !blockedcmds.contains("/fly"))
-				blockedcmds.add("/fly");
-		}
-
-		return blockedcmds;
-	}
-
-	public static ConfigManager getInstance() {
-		return instance;
+	public List<String> getBlockedCommands() {
+		return getConfig().getStringList("blocked-commands");
 	}
 }

@@ -21,7 +21,7 @@ public class StartTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		SpawnTask.getInstance().start(plugin);
+		SpawnTask.start(plugin);
 	}
 
 	private long calculateDelay() {

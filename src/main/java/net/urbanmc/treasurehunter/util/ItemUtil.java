@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemUtil {
 
-	public static ItemStack getItem(String name) {
+	private static ItemStack getItem(String name) {
 		String[] split = name.split(" ");
 
 		ItemStack is = new ItemStack(Material.getMaterial(split[0].toUpperCase()));
@@ -83,7 +83,7 @@ public class ItemUtil {
 			}
 
 			if (arg.startsWith("durability:")) {
-				short durability = Short.parseShort(arg.substring(7));
+				short durability = Short.parseShort(arg.substring(11));
 				is.setDurability(durability);
 			}
 		}
@@ -103,6 +103,10 @@ public class ItemUtil {
 				return "arrow_damage";
 			case "punch":
 				return "arrow_knockback";
+			case "looting":
+				return "loot_bonus_mobs";
+			case "protection":
+				return "protection_environmental";
 		}
 		return s;
 	}

@@ -7,45 +7,41 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.List;
+public class CommandListener implements Listener {
 
-public class CommandListener implements Listener{
+	@EventHandler
+	public void onCommand(PlayerCommandPreprocessEvent e) {
+		if (TreasureChestManager.getInstance().getCurrentChest() == null)
+			return;
 
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent e) {
+		if (!TreasureChestManager.getInstance().getCurrentChest().isHunting(e.getPlayer()))
+			return;
 
-        if(TreasureChestManager.getInstance().getCurrentChest() == null)
-            return;
+		if (ConfigManager.getInstance().getBlockedCommands().isEmpty())
+			return;
 
-        if(!TreasureChestManager.getInstance().getCurrentChest().getHunting().contains(e.getPlayer()))
-            return;
+		String label = e.getMessage().split(" ")[0];
 
-        if(ConfigManager.getInstance().getblckedCmds().isEmpty())
-            return;
+		boolean cancel = false;
 
-        String label = e.getMessage().split(" ")[0];
+		for (String command : ConfigManager.getInstance().getBlockedCommands()) {
+			if (!command.isEmpty() && command.equalsIgnoreCase(label)) {
+				cancel = true;
+				break;
+			}
 
-        boolean cancel = false;
+			if (command.equalsIgnoreCase(e.getMessage())) {
+				cancel = true;
+				break;
+			}
+		}
 
-        for(String command : ConfigManager.getInstance().getblckedCmds())
-        {
-            if(!command.contains(" ") && command.equalsIgnoreCase(label)) {
-                cancel = true;
-                break;
-            }
+		if (!cancel)
+			return;
 
-            if(command.equalsIgnoreCase(e.getMessage())) {
-                cancel = true;
-                break;
-            }
-        }
+		e.setCancelled(true);
 
-        if(!cancel)
-            return;
-
-        e.setCancelled(true);
-
-        e.getPlayer().sendMessage(Messages.getString("hunting.blocked-command"));
-    }
+		e.getPlayer().sendMessage(Messages.getString("hunting.blocked-command"));
+	}
 
 }

@@ -30,8 +30,12 @@ public class SpawnTask extends BukkitRunnable {
 		return instance;
 	}
 
-	void start(TreasureHunter plugin) {
-		runTaskTimer(plugin, 0, 72000);
+	static void start(TreasureHunter plugin) {
+		if (instance.hasBeenScheduled()) {
+			instance = new SpawnTask();
+		}
+
+		instance.runTaskTimer(plugin, 0, 72000);
 	}
 
 	@Override
@@ -64,7 +68,7 @@ public class SpawnTask extends BukkitRunnable {
 
 		c.getBlockInventory().addItem(itemArray);
 
-		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.toString()));
+		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.getDisplayName()));
 	}
 
 	private Location randomLocation() {
@@ -79,5 +83,34 @@ public class SpawnTask extends BukkitRunnable {
 
 	private List<ItemStack> getItems(TreasureChestType type) {
 		return ItemManager.getInstance().getItemsForChestType(type);
+	}
+
+	public boolean hasBeenScheduled() {
+		try {
+			instance.getTaskId();
+			return true;
+		} catch (IllegalStateException ex) {
+			return false;
+		}
+	}
+
+	/*
+	 * @return true if successfully; false if error (such as never started)
+	 */
+	public boolean cancelTask() {
+		try {
+			cancel();
+			return true;
+		} catch (IllegalStateException ex) {
+			return false;
+		}
+	}
+
+	public void forceSpawn(TreasureHunter plugin) {
+		cancelTask();
+
+		instance = new SpawnTask();
+
+		instance.runTask(plugin);
 	}
 }

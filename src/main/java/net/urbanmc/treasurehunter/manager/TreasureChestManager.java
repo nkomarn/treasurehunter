@@ -93,8 +93,9 @@ public class TreasureChestManager {
 		Chest c = (Chest) getCurrentChest().getBlock().getState();
 
 		c.getBlockInventory().clear();
-		c.setType(Material.AIR);
+		c.getBlock().setType(Material.AIR);
 
+		chest = null;
 		saveChest();
 	}
 }

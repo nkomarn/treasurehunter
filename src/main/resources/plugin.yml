@@ -11,6 +11,13 @@ commands:
     aliases: [th]
 
 permissions:
+  treasurehunter.*:
+    default: op
+    children:
+      treasurehunter.default: true
+      treasurehunter.tp: true
+      treasurehunter.spawn: true
+      treasurehunter.reload: true
   treasurehunter.default:
     default: true
     children:
@@ -18,13 +25,6 @@ permissions:
       treasurehunter.start: true
       treasurehunter.cancel: true
       treasurehunter.chests: true
-  treasurehunter.admin:
-    default: false
-    children:
-      treasurehunter.default: true
-      treasuhunter.tp: false
-      treasurehunter.spawn: false
-      treasurehunter.reload: false
   treasurehunter.command:
     default: false
   treasurehunter.start:

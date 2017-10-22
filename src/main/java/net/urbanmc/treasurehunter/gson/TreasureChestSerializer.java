@@ -8,6 +8,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class TreasureChestSerializer implements JsonSerializer<TreasureChest>, JsonDeserializer<TreasureChest> {
 
@@ -25,6 +28,21 @@ public class TreasureChestSerializer implements JsonSerializer<TreasureChest>, J
 		blockObj.addProperty("world", b.getWorld().getName());
 
 		obj.add("block", blockObj);
+
+		JsonArray hunting = new JsonArray(), cancelled = new JsonArray();
+
+		for (UUID id : chest.getHunting()) {
+			hunting.add(id.toString());
+		}
+
+		for (UUID id : chest.getCancelled()) {
+			cancelled.add(id.toString());
+		}
+
+		obj.add("hunting", hunting);
+		obj.add("cancelled", cancelled);
+
+		obj.addProperty("found", chest.isFound());
 
 		return obj;
 	}
@@ -47,6 +65,27 @@ public class TreasureChestSerializer implements JsonSerializer<TreasureChest>, J
 
 		Block b = world.getBlockAt(x, y, z);
 
-		return new TreasureChest(type, b);
+		List<UUID> hunting = new ArrayList<>(), cancelled = new ArrayList<>();
+
+		for (JsonElement je : obj.getAsJsonArray("hunting")) {
+			hunting.add(UUID.fromString(je.getAsString()));
+		}
+
+		for (JsonElement je : obj.getAsJsonArray("cancelled")) {
+			cancelled.add(UUID.fromString(je.getAsString()));
+		}
+
+		boolean found = obj.get("found").getAsBoolean();
+
+		TreasureChest chest = new TreasureChest(type, b);
+
+		chest.getHunting().addAll(hunting);
+		chest.getCancelled().addAll(cancelled);
+
+		if (found) {
+			chest.setFound();
+		}
+
+		return chest;
 	}
 }

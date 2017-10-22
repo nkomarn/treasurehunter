@@ -53,6 +53,7 @@ public class StartSub extends SubCommand {
 
 		if (chest.isHunting(p)) {
 			sendPropMessage(p, "command.start.hunting");
+			return;
 		}
 
 		if (!warned.contains(p.getUniqueId())) {

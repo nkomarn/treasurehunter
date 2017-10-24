@@ -17,6 +17,9 @@ public class TeleportListener implements Listener {
 		Player p = e.getPlayer();
 		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
 
+		if (chest == null)
+			return;
+
 		if (chest.isHunting(p) && !e.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			e.setCancelled(true);
 			p.sendMessage(ChatColor.DARK_RED + "You cannot teleport while tagged!");

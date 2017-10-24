@@ -15,6 +15,9 @@ public class ChestListener implements Listener {
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
+		if (TreasureChestManager.getInstance().getCurrentChest() == null)
+			return;
+
 		Block eventBlock = e.getBlock();
 		Block chestBlock = TreasureChestManager.getInstance().getCurrentChest().getBlock();
 
@@ -26,6 +29,9 @@ public class ChestListener implements Listener {
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent e) {
 		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
+
+		if (chest == null)
+			return;
 
 		if (chest.isFound())
 			return;

@@ -63,6 +63,7 @@ public class TreasureHunter extends JavaPlugin {
 		registerListener(new CompassListener());
 		registerListener(new FlyListener());
 		registerListener(new GodListener());
+		registerListener(new TeleportListener());
 	}
 
 	private void registerListener(Listener l) {

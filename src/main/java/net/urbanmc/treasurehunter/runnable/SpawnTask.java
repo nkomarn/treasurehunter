@@ -82,7 +82,7 @@ public class SpawnTask extends BukkitRunnable {
 	}
 
 	private List<ItemStack> getItems(TreasureChestType type) {
-		return ItemManager.getInstance().getItemsForChestType(type);
+		return ItemManager.getInstance().getRandomItemsForChestType(type);
 	}
 
 	public boolean hasBeenScheduled() {

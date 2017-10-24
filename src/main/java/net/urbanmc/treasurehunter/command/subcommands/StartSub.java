@@ -14,7 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class StartSub extends SubCommand {
 
@@ -65,14 +68,26 @@ public class StartSub extends SubCommand {
 			return;
 		}
 
+		start(p, chest);
+	}
+
+	private void timeOut(UUID p) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			if (warned.contains(p))
+				warned.remove(p);
+		}, 500);
+	}
+
+	private void start(Player p, TreasureChest chest) {
 		warned.remove(p.getUniqueId());
 
 		chest.getHunting().add(p.getUniqueId());
 
 		sendPropMessage(p, "command.start.start-hunt");
 
-		p.getInventory().addItem(compass.clone());
+		p.teleport(p.getWorld().getSpawnLocation());
 
+		p.getInventory().addItem(compass.clone());
 		p.setCompassTarget(chest.getBlock().getLocation());
 
 		if (ConfigManager.getConfig().getBoolean("disable-fly")) {
@@ -82,12 +97,5 @@ public class StartSub extends SubCommand {
 		if (ConfigManager.getConfig().getBoolean("disable-god")) {
 			TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
 		}
-	}
-
-	private void timeOut(UUID p) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-			if (warned.contains(p))
-				warned.remove(p);
-		}, 500);
 	}
 }

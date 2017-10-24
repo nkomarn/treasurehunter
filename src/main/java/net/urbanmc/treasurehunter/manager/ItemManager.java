@@ -12,9 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
@@ -27,6 +25,7 @@ public class ItemManager {
 
 	private RangeMap<Double, TreasureChestType> percentageMap;
 	private Map<TreasureChestType, List<ItemStack>> itemMap;
+	private Map<TreasureChestType, Integer> itemAmountMap;
 
 	private ItemManager() {
 		createFile();
@@ -95,12 +94,15 @@ public class ItemManager {
 
 	private void loadItems(FileConfiguration data) {
 		itemMap = new HashMap<>();
+		itemAmountMap = new HashMap<>();
 
 		for (TreasureChestType type : TreasureChestType.values()) {
-			List<String> itemStringList = data.getStringList("items." + type.name().toLowerCase());
+			String typeName = type.name().toLowerCase();
+			List<String> itemStringList = data.getStringList("items." + typeName + ".items");
 			List<ItemStack> items = ItemUtil.getItemList(itemStringList);
 
 			itemMap.put(type, items);
+			itemAmountMap.put(type, data.getInt("items." + typeName + ".amount"));
 		}
 	}
 
@@ -122,7 +124,20 @@ public class ItemManager {
 		return percentageMap.get(r);
 	}
 
-	public List<ItemStack> getItemsForChestType(TreasureChestType type) {
-		return itemMap.get(type);
+	public List<ItemStack> getRandomItemsForChestType(TreasureChestType type) {
+		List<ItemStack> items = new ArrayList<>();
+		List<ItemStack> configItems = itemMap.get(type);
+
+		if (configItems.size() == 0)
+			return items;
+
+		Random r = ThreadLocalRandom.current();
+
+		while (items.size() < itemAmountMap.get(type)) {
+			int index = r.nextInt(configItems.size());
+			items.add(configItems.get(index));
+		}
+
+		return items;
 	}
 }

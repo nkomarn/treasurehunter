@@ -49,6 +49,11 @@ public class StartSub extends SubCommand {
 		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
 		Player p = (Player) sender;
 
+		if (chest == null) {
+			sendPropMessage(p, "command.start.none");
+			return;
+		}
+
 		if (chest.getCancelled().contains(p.getUniqueId())) {
 			sendPropMessage(p, "command.start.cancelled");
 			return;

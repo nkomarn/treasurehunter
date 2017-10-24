@@ -16,12 +16,10 @@ public class CancelSub extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		//Todo Allows the player to cancel. Takes away their compass. They cannot start the hunt again.
 		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
-
 		Player p = (Player) sender;
 
-		if (!chest.isHunting(p)) {
+		if (chest == null || !chest.isHunting(p)) {
 			sender.sendMessage(Messages.getString("command.cancel.not-hunting"));
 			return;
 		}

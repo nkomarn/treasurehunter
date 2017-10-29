@@ -90,7 +90,7 @@ public class StartSub extends SubCommand {
 
 		sendPropMessage(p, "command.start.start-hunt");
 
-		p.teleport(p.getWorld().getSpawnLocation());
+		p.teleport(Bukkit.getWorld(ConfigManager.getConfig().getString("world")).getSpawnLocation());
 
 		p.getInventory().addItem(compass.clone());
 		p.setCompassTarget(chest.getBlock().getLocation());

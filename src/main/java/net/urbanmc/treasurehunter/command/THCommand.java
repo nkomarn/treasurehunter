@@ -30,6 +30,7 @@ public class THCommand implements CommandExecutor {
 		subList.add(new ChestsSub());
 		subList.add(new TpSub());
 		subList.add(new ReloadSub());
+		subList.add(new StatusSub());
 	}
 
 	@Override

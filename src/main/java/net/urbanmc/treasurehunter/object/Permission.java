@@ -9,7 +9,8 @@ public enum Permission {
     CHESTS_SUB("chests"),
     TP_SUB("tp"),
     ADMIN("admin"),
-    RELOAD("reload");
+    RELOAD("reload"),
+    STATUS("status");
 
     private String permission;
 

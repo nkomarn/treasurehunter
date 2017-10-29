@@ -68,7 +68,7 @@ public class SpawnTask extends BukkitRunnable {
 
 		c.getBlockInventory().addItem(itemArray);
 
-		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.getDisplayName()));
+		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.getDisplayName().toLowerCase()));
 	}
 
 	private Location randomLocation() {

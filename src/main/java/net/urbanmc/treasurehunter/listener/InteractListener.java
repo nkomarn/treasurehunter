@@ -29,8 +29,7 @@ public class InteractListener implements Listener {
 				"broadcast.found",
 				e.getPlayer().getDisplayName(),
 				TreasureChestManager.getInstance().getCurrentChest().getType().toString()));
-
-		TreasureChestManager.getInstance().getCurrentChest().getHunting().clear();
+		
 		//Well Idk if you want to leave the chest or make it when they click the chest, it vanishes and all the items
 		// drop on the ground.
 		TreasureChestManager.getInstance().setCurrentChest(null);

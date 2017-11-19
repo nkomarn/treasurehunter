@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
+import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
@@ -21,11 +22,8 @@ public class StatusSub extends SubCommand {
 			return;
 		}
 
-		String message = ChatColor.GREEN + "The " +
-				TreasureChestManager.getInstance().getCurrentChest().getType().toString().toLowerCase() + " chest" +
-				(TreasureChestManager.getInstance().getCurrentChest()
-						.isFound() ? " has been found" : "has not been found") + "!";
-
+		String message = Messages.getString("command.status", TreasureChestManager.getInstance().getCurrentChest().getType().getDisplayName(),
+				TreasureChestManager.getInstance().getCurrentChest().isFound() ? "" : " not" );
 		if (sender instanceof Player)
 			sender.sendMessage(message);
 		else

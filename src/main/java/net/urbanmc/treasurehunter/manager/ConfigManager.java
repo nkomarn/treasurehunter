@@ -1,8 +1,10 @@
 package net.urbanmc.treasurehunter.manager;
 
+import com.earth2me.essentials.spawn.EssentialsSpawn;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,6 +18,8 @@ public class ConfigManager {
 
 	private final File FILE = new File("plugins/TreasureHunter", "config.yml");
 	private FileConfiguration data;
+
+	private Location worldSpawn;
 
 	private ConfigManager() {
 		createFile();
@@ -34,6 +38,8 @@ public class ConfigManager {
 			plugin.getLogger().severe("World is not loaded! Cannot start without a properly loaded world!");
 			plugin.error();
 		}
+
+		instance.setWorldSpawn();
 
 		if (!getConfig().getBoolean("ready")) {
 			plugin.getLogger().severe("The config file has not been properly edited! Please make sure all " +
@@ -77,6 +83,7 @@ public class ConfigManager {
 
 	public void reloadConfig() {
 		data = YamlConfiguration.loadConfiguration(FILE);
+		setWorldSpawn();
 	}
 
 	private FileConfiguration getData() {
@@ -85,5 +92,15 @@ public class ConfigManager {
 
 	public List<String> getBlockedCommands() {
 		return getConfig().getStringList("blocked-commands");
+	}
+
+	private void setWorldSpawn() {
+		EssentialsSpawn spawn = (EssentialsSpawn) Bukkit.getPluginManager().getPlugin("EssentialsSpawn");
+
+		worldSpawn = spawn.getSpawn("default");
+	}
+
+	public Location getWorldSpawn() {
+		return worldSpawn;
 	}
 }

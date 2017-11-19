@@ -46,7 +46,7 @@ public class ChestListener implements Listener {
 			TreasureChestManager.getInstance().saveChest();
 
 			String name = e.getPlayer().getName(), chestType = chest.getType().getDisplayName();
-			Bukkit.broadcastMessage(Messages.getString("broadcast.found", name.toLowerCase(), chestType));
+			Bukkit.broadcastMessage(Messages.getString("broadcast.found", name, chestType));
 		}
 	}
 }

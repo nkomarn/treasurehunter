@@ -1,6 +1,7 @@
 package net.urbanmc.treasurehunter;
 
 import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.spawn.EssentialsSpawn;
 import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.*;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
@@ -79,8 +80,8 @@ public class TreasureHunter extends JavaPlugin {
 	private boolean checkDependencies() {
 		essentials = getPlugin(Essentials.class);
 
-		if (essentials == null) {
-			getLogger().severe("Essentials and RandomTP are needed for Treasure Hunter! Disabling plugin..");
+		if (essentials == null || getPlugin(EssentialsSpawn.class) == null) {
+			getLogger().severe("Essentials and EssentialsSpawn are needed for Treasure Hunter! Disabling plugin..");
 			setEnabled(false);
 
 			return false;

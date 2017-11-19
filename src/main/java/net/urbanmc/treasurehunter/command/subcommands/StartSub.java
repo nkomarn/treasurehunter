@@ -14,7 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class StartSub extends SubCommand {
 
@@ -88,7 +91,7 @@ public class StartSub extends SubCommand {
 	private void start(Player p, TreasureChest chest) {
 		warned.remove(p.getUniqueId());
 
-		p.teleport(Bukkit.getWorld(ConfigManager.getConfig().getString("world")).getSpawnLocation());
+		p.teleport(ConfigManager.getInstance().getWorldSpawn());
 
 		chest.getHunting().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();

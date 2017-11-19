@@ -1,7 +1,6 @@
 package net.urbanmc.treasurehunter;
 
 import com.earth2me.essentials.Essentials;
-import net.urbanmc.randomtp.RandomTP;
 import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.*;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
@@ -9,7 +8,6 @@ import net.urbanmc.treasurehunter.manager.ItemManager;
 import net.urbanmc.treasurehunter.runnable.StartTask;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TreasureHunter extends JavaPlugin {
@@ -80,9 +78,8 @@ public class TreasureHunter extends JavaPlugin {
 
 	private boolean checkDependencies() {
 		essentials = getPlugin(Essentials.class);
-		Plugin temp = getPlugin(RandomTP.class);
 
-		if (essentials == null || temp == null) {
+		if (essentials == null) {
 			getLogger().severe("Essentials and RandomTP are needed for Treasure Hunter! Disabling plugin..");
 			setEnabled(false);
 

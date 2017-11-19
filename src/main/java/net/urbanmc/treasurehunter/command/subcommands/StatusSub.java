@@ -9,27 +9,27 @@ import org.bukkit.entity.Player;
 
 public class StatusSub extends SubCommand {
 
+	public StatusSub() {
+		super("status", Permission.STATUS, false, false);
+	}
 
-    public StatusSub() {
-        super("status", Permission.STATUS, false, false);
-    }
+	@Override
+	public void execute(CommandSender sender, String[] args) {
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
+		if (TreasureChestManager.getInstance().getCurrentChest() == null) {
+			sendPropMessage(sender, "command.no-chest");
+			return;
+		}
 
-        if (TreasureChestManager.getInstance().getCurrentChest() == null) {
-            sendPropMessage(sender, "command.no-chest");
-            return;
-        }
+		String message = ChatColor.GREEN + "The " +
+				TreasureChestManager.getInstance().getCurrentChest().getType().toString().toLowerCase() + " chest" +
+				(TreasureChestManager.getInstance().getCurrentChest()
+						.isFound() ? " has been found" : "has not been found") + "!";
 
-        String message = ChatColor.GREEN + "The " + TreasureChestManager.getInstance().getCurrentChest().getType().toString().toLowerCase() +
-                " chest" + (TreasureChestManager.getInstance().getCurrentChest().isFound() ? " has been found" : "has not been found") + "!";
+		if (sender instanceof Player)
+			sender.sendMessage(message);
+		else
+			sender.sendMessage(ChatColor.stripColor(message));
 
-
-        if (sender instanceof Player)
-            sender.sendMessage(message);
-        else
-            sender.sendMessage(ChatColor.stripColor(message));
-
-    }
+	}
 }

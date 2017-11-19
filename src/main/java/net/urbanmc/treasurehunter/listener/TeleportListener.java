@@ -1,8 +1,8 @@
 package net.urbanmc.treasurehunter.listener;
 
+import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.TreasureChest;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +22,7 @@ public class TeleportListener implements Listener {
 
 		if (chest.isHunting(p) && !e.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			e.setCancelled(true);
-			p.sendMessage(ChatColor.DARK_RED + "You cannot teleport while tagged!");
+			p.sendMessage(Messages.getString("hunting.no_tp"));
 		}
 	}
 }

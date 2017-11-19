@@ -14,10 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class StartSub extends SubCommand {
 
@@ -65,11 +62,16 @@ public class StartSub extends SubCommand {
 		}
 
 		if (!warned.contains(p.getUniqueId())) {
-			p.sendMessage(Messages.getString("command.start.warning"));
+			sendPropMessage(p, "command.start.warning");
 
 			warned.add(p.getUniqueId());
 
 			timeOut(p.getUniqueId());
+			return;
+		}
+
+		if (!checkSpace(p, compass)) {
+			sendPropMessage(p, "command.start.no_space");
 			return;
 		}
 
@@ -86,11 +88,12 @@ public class StartSub extends SubCommand {
 	private void start(Player p, TreasureChest chest) {
 		warned.remove(p.getUniqueId());
 
+		p.teleport(Bukkit.getWorld(ConfigManager.getConfig().getString("world")).getSpawnLocation());
+
 		chest.getHunting().add(p.getUniqueId());
+		TreasureChestManager.getInstance().saveChest();
 
 		sendPropMessage(p, "command.start.start-hunt");
-
-		p.teleport(Bukkit.getWorld(ConfigManager.getConfig().getString("world")).getSpawnLocation());
 
 		p.getInventory().addItem(compass.clone());
 		p.setCompassTarget(chest.getBlock().getLocation());
@@ -102,5 +105,29 @@ public class StartSub extends SubCommand {
 		if (ConfigManager.getConfig().getBoolean("disable-god")) {
 			TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private boolean checkSpace(Player p, ItemStack is) {
+		if (p.getInventory().firstEmpty() < 36 && p.getInventory().firstEmpty() != -1)
+			return true;
+
+		for (ItemStack item : p.getInventory()) {
+			if (item == null)
+				continue;
+
+			if (item.getType() != is.getType())
+				continue;
+
+			if (item.getData().getData() != is.getData().getData())
+				continue;
+
+			if (item.getAmount() + is.getAmount() > 64)
+				continue;
+
+			return true;
+		}
+
+		return false;
 	}
 }

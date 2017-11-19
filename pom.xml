@@ -6,7 +6,7 @@
 
     <groupId>net.urbanmc</groupId>
     <artifactId>TreasureHunter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>TreasureHunter</name>
     <url>http://urbanmc.net/</url>
@@ -34,12 +34,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.urbanmc</groupId>
-            <artifactId>RandomTP</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
@@ -48,6 +42,12 @@
             <groupId>net.ess3</groupId>
             <artifactId>Essentials</artifactId>
             <version>2.13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.palmergames</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.91.4.15</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

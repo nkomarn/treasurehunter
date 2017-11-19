@@ -33,6 +33,7 @@ public class StartTask extends BukkitRunnable {
 
 		newCal.set(Calendar.HOUR_OF_DAY, hour + 1);
 		newCal.set(Calendar.MINUTE, 0);
+		newCal.set(Calendar.SECOND, 0);
 
 		long millisTime = newCal.getTimeInMillis() - cal.getTimeInMillis();
 

@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -68,6 +69,25 @@ public class ItemUtil {
 				continue;
 			}
 
+			if (arg.startsWith("book:")) {
+				String enchant = arg.substring(5);
+				String[] enchantSplit = enchant.split("/");
+
+				if (!(meta instanceof EnchantmentStorageMeta))
+					continue;
+
+				EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
+
+				enchantSplit[0] = convertEnchants(enchantSplit[0]);
+
+				Enchantment ench = Enchantment.getByName(enchantSplit[0].toUpperCase());
+				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
+
+				bookMeta.addStoredEnchant(ench, level, true);
+				
+				continue;
+			}
+
 			if (arg.startsWith("effect:")) {
 				String effect = arg.substring(7);
 				String[] effectSplit = effect.split("/");
@@ -80,6 +100,7 @@ public class ItemUtil {
 				PotionMeta potionMeta = (PotionMeta) meta;
 
 				potionMeta.addCustomEffect(new PotionEffect(effectType, duration, level), true);
+				continue;
 			}
 
 			if (arg.startsWith("durability:")) {

@@ -1,11 +1,7 @@
 package net.urbanmc.treasurehunter.runnable;
 
-import net.urbanmc.randomtp.Util;
 import net.urbanmc.treasurehunter.TreasureHunter;
-import net.urbanmc.treasurehunter.manager.ConfigManager;
-import net.urbanmc.treasurehunter.manager.ItemManager;
-import net.urbanmc.treasurehunter.manager.Messages;
-import net.urbanmc.treasurehunter.manager.TreasureChestManager;
+import net.urbanmc.treasurehunter.manager.*;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import org.bukkit.Bukkit;
@@ -42,7 +38,9 @@ public class SpawnTask extends BukkitRunnable {
 	public void run() {
 		TreasureChestManager.getInstance().removeCurrentChest();
 
-		Location loc = randomLocation();
+		TreasureChestType type = randomType();
+
+		Location loc = randomLocation(type);
 
 		if (loc == null) {
 			Bukkit.getLogger().severe("[TreasureHunter] Error generating location for chest!");
@@ -50,8 +48,6 @@ public class SpawnTask extends BukkitRunnable {
 		}
 
 		Block b = loc.getBlock();
-
-		TreasureChestType type = randomType();
 
 		TreasureChest chest = new TreasureChest(type, b);
 
@@ -71,10 +67,10 @@ public class SpawnTask extends BukkitRunnable {
 		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.getDisplayName().toLowerCase()));
 	}
 
-	private Location randomLocation() {
+	private Location randomLocation(TreasureChestType type) {
 		World world = Bukkit.getWorld(ConfigManager.getConfig().getString("world"));
 
-		return Util.generateLocation(world);
+		return SpawnManager.getInstance().generateLocation(world, type);
 	}
 
 	private TreasureChestType randomType() {
@@ -85,7 +81,7 @@ public class SpawnTask extends BukkitRunnable {
 		return ItemManager.getInstance().getRandomItemsForChestType(type);
 	}
 
-	public boolean hasBeenScheduled() {
+	private boolean hasBeenScheduled() {
 		try {
 			instance.getTaskId();
 			return true;
@@ -97,7 +93,7 @@ public class SpawnTask extends BukkitRunnable {
 	/*
 	 * @return true if successfully; false if error (such as never started)
 	 */
-	public boolean cancelTask() {
+	private boolean cancelTask() {
 		try {
 			cancel();
 			return true;

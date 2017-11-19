@@ -3,7 +3,7 @@ name: TreasureHunter
 version: 0.1
 description: Spawns chests around the world at intervals containing various loot
 authors: [Elian, Silverwolfg11]
-softdepend: [Multiverse-Core, RandomTP, Essentials]
+softdepend: [Multiverse-Core, RandomTP, Essentials, Towny]
 
 commands:
   treasurehunter:
@@ -25,6 +25,7 @@ permissions:
       treasurehunter.start: true
       treasurehunter.cancel: true
       treasurehunter.chests: true
+      treasurehunter.status: true
   treasurehunter.command:
     default: false
   treasurehunter.start:
@@ -38,4 +39,6 @@ permissions:
   treasurehunter.spawn:
       default: false
   treasurehunter.reload:
+      default: false
+  treasurehunter.status:
       default: false

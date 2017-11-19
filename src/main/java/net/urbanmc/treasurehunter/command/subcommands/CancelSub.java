@@ -31,9 +31,15 @@ public class CancelSub extends SubCommand {
 		}
 
 		p.setCompassTarget(p.getWorld().getSpawnLocation());
+		removeCompass(p);
 
 		chest.getCancelled().add(p.getUniqueId());
+		TreasureChestManager.getInstance().saveChest();
 
 		sender.sendMessage(Messages.getString("command.cancel.cancelled"));
+	}
+
+	private void removeCompass(Player p) {
+		p.getInventory().removeItem(StartSub.compass);
 	}
 }

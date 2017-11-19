@@ -6,7 +6,11 @@ import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class CompassListener implements Listener {
 
@@ -35,4 +39,14 @@ public class CompassListener implements Listener {
 		p.setCompassTarget(TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation());
 	}
 
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		ItemStack current = e.getCurrentItem(), cursor = e.getCursor();
+		Inventory inventory = e.getClickedInventory();
+
+		if ((StartSub.compass.isSimilar(current) || StartSub.compass.isSimilar(cursor)) &&
+				(inventory == null || inventory.getType() != InventoryType.PLAYER)) {
+			e.setCancelled(true);
+		}
+	}
 }

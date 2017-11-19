@@ -2,15 +2,19 @@ package net.urbanmc.treasurehunter.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.urbanmc.treasurehunter.command.subcommands.StartSub;
 import net.urbanmc.treasurehunter.gson.TreasureChestSerializer;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class TreasureChestManager {
 
@@ -65,7 +69,7 @@ public class TreasureChestManager {
 		}
 	}
 
-	private void saveChest() {
+	public void saveChest() {
 		try {
 			PrintWriter writer = new PrintWriter(FILE);
 
@@ -87,15 +91,25 @@ public class TreasureChestManager {
 	}
 
 	public void removeCurrentChest() {
-		if (getCurrentChest() == null)
+		TreasureChest chest = getCurrentChest();
+
+		if (chest == null)
 			return;
 
-		Chest c = (Chest) getCurrentChest().getBlock().getState();
+		for (UUID id : chest.getHunting()) {
+			Player p = Bukkit.getPlayer(id);
+
+			if (p != null) {
+				p.getInventory().removeItem(StartSub.compass);
+			}
+		}
+
+		Chest c = (Chest) chest.getBlock().getState();
 
 		c.getBlockInventory().clear();
 		c.getBlock().setType(Material.AIR);
 
-		chest = null;
+		this.chest = null;
 		saveChest();
 	}
 }

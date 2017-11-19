@@ -1,0 +1,38 @@
+# TreasureHunter Chest Spawn Locations Configuration #
+######################################################
+
+common:
+  # Range for teleport on x/z (can go from -x to +x)
+  range-x: 3000
+  range-z: 3000
+
+  # Minimum x/z (also negative). Set to 0 to have no minimum
+  nozone-x: 1000
+  nozone-z: 1000
+
+  # How far away it must be from other towns (in chunks) * Set this to 0 if you are not using Towny
+  range-chunk: 5
+rare:
+  range-x: 3000
+  range-z: 3000
+
+  nozone-x: 1000
+  nozone-z: 1000
+
+  range-chunk: 5
+epic:
+  range-x: 3000
+  range-z: 3000
+
+  nozone-x: 1000
+  nozone-z: 1000
+
+  range-chunk: 5
+legendary:
+  range-x: 3000
+  range-z: 3000
+
+  nozone-x: 1000
+  nozone-z: 1000
+
+  range-chunk: 5

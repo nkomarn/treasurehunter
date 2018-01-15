@@ -36,6 +36,7 @@ public class CompassListener implements Listener {
 			return;
 		}
 
+		p.sendMessage(Messages.getString("compass.track"));
 		p.setCompassTarget(TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation());
 	}
 

@@ -91,7 +91,8 @@ public class StartSub extends SubCommand {
 	private void start(Player p, TreasureChest chest) {
 		warned.remove(p.getUniqueId());
 
-		p.teleport(ConfigManager.getInstance().getWorldSpawn().add(0, 2,0 ));
+		p.setFallDistance(0);
+		p.teleport(ConfigManager.getInstance().getWorldSpawn().add(0, 1,0 ));
 
 		chest.getHunting().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();

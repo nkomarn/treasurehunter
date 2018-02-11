@@ -101,6 +101,7 @@ public class TreasureChestManager {
 
 			if (p != null) {
 				p.getInventory().removeItem(StartSub.compass);
+				p.setCompassTarget(p.getWorld().getSpawnLocation());
 			}
 		}
 

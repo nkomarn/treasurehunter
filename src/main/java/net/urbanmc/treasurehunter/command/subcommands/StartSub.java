@@ -8,6 +8,7 @@ import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,6 +25,7 @@ public class StartSub extends SubCommand {
 	public static ItemStack compass;
 	private List<UUID> warned = new ArrayList<>();
 	private TreasureHunter plugin;
+	private Location spawn;
 
 	public StartSub(TreasureHunter plugin) {
 		super("start", Permission.START_SUB, true, false);
@@ -92,7 +94,7 @@ public class StartSub extends SubCommand {
 		warned.remove(p.getUniqueId());
 
 		p.setFallDistance(0);
-		p.teleport(ConfigManager.getInstance().getWorldSpawn().add(0, 1,0 ));
+		p.teleport(getSpawn());
 
 		chest.getHunting().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();
@@ -133,5 +135,20 @@ public class StartSub extends SubCommand {
 		}
 
 		return false;
+	}
+
+	private Location getSpawn() {
+		if(spawn != null)
+			return spawn;
+
+		Location loc = ConfigManager.getInstance().getWorldSpawn().add(0, 2,0 );
+
+		for (Material mat = loc.getBlock().getType(); mat.equals(Material.AIR); mat = loc.getBlock().getType()) {
+			loc.subtract(0.0D, 1.0D, 0.0D);
+		}
+
+		loc.add(0.0D, 1.0D, 0.0D);
+
+		return spawn = loc;
 	}
 }

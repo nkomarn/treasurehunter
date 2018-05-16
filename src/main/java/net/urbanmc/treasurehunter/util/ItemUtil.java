@@ -23,7 +23,7 @@ public class ItemUtil {
 		if(split[0].equalsIgnoreCase("bank_note") ||
 				split[0].equalsIgnoreCase("xpbottle") ||
 				split[0].equalsIgnoreCase("mcmmo_voucher"))
-			return handleSpecialItems(split[0],split[1],split[2]);
+			return (split[0].equalsIgnoreCase("xpbottle")) ? handleSpecialItems(split[0], split[1], split[2]) : handleSpecialItems(split[0], split[1]);
 
 
 		ItemStack is = new ItemStack(Material.getMaterial(split[0].toUpperCase()));

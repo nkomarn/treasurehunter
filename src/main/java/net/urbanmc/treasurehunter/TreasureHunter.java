@@ -11,10 +11,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public class TreasureHunter extends JavaPlugin {
 
 	private static Essentials essentials;
-	private boolean isError;
+	private String isError;
 
 	public static Essentials getEssentials() {
 		return essentials;
@@ -31,7 +33,7 @@ public class TreasureHunter extends JavaPlugin {
 		registerCommand();
 
 		if (isError()) { // The manager class should print the error reason
-			getLogger().info("Cannot start task due to errors.");
+			getLogger().info("Cannot start task due to errors. " + isError);
 		} else {
 			start();
 		}
@@ -42,18 +44,26 @@ public class TreasureHunter extends JavaPlugin {
 	 * If there are any errors, we will not start the task.
 	 */
 	private void initializeManagers() {
-		isError = false;
+		isError = null;
 
 		ItemManager.getInstance().checkError(this);
 		ConfigManager.checkError(this);
 	}
 
-	public void error() {
-		isError = true;
+	public void error(String error, Throwable... throwable) {
+		isError = error;
+
+		if (throwable == null) Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error);
+
+		else Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error, throwable);
 	}
 
 	public boolean isError() {
-		return isError;
+		return isError != null;
+	}
+
+	public void throwError() {
+		Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + isError);
 	}
 
 	private void registerListeners() {

@@ -19,6 +19,7 @@ public class SpawnSub extends SubCommand {
 	public void execute(CommandSender sender, String[] args) {
 		if (plugin.isError()) {
 			sendPropMessage(sender, "command.spawn.error_on_startup");
+			plugin.throwError();
 			return;
 		}
 

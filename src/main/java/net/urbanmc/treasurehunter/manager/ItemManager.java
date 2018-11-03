@@ -41,15 +41,13 @@ public class ItemManager {
 		try {
 			loadPercentages(data);
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Error loading percentages!", e);
-			plugin.error();
+			plugin.error("Error loading percentages!", e);
 		}
 
 		try {
 			loadItems(data);
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Error loading items!", e);
-			plugin.error();
+			plugin.error("Error loading items!", e);
 		}
 	}
 

@@ -28,24 +28,21 @@ public class ConfigManager {
 
 	public static void checkError(TreasureHunter plugin) {
 		if (getConfig() == null) {
-			plugin.getLogger().severe("Error loading config! Try deleting the config file.");
-			plugin.error();
+			plugin.error("Error loading config! Try deleting the config file.");
 		}
 
 		World world = Bukkit.getWorld(getConfig().getString("world"));
 
 		if (world == null) {
-			plugin.getLogger().severe("World is not loaded! Cannot start without a properly loaded world!");
-			plugin.error();
+			plugin.error("World is not loaded! Cannot start without a properly loaded world!");
 		}
 
 		instance.setWorldSpawn();
 
 		if (!getConfig().getBoolean("ready")) {
-			plugin.getLogger().severe("The config file has not been properly edited! Please make sure all " +
+			plugin.error("The config file has not been properly edited! Please make sure all " +
 					                          "configurations are to your liking, and change \"ready\" to true in " +
 					                          "config.yml.");
-			plugin.error();
 		}
 	}
 

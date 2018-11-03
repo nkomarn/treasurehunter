@@ -3,6 +3,7 @@ package net.urbanmc.treasurehunter.util;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -197,7 +198,7 @@ public class ItemUtil {
 
 
 	private static ItemStack generateXPBottle(String level, String amount) {
-		ItemStack item = new ItemStack(Material.EXP_BOTTLE, Integer.getInteger(amount.substring(7)));
+		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, Integer.valueOf(amount.substring(7)));
 
 		ItemMeta meta = item.getItemMeta();
 
@@ -208,7 +209,7 @@ public class ItemUtil {
 		level = level.substring(6);
 
 		lore.add(new StringBuilder().append(ChatColor.LIGHT_PURPLE).append("Signer ").append(ChatColor.WHITE).append("Server").toString());
-		lore.add(new StringBuilder().append(ChatColor.LIGHT_PURPLE).append("XP ").append(ChatColor.WHITE).append(getXpForLevel(Integer.getInteger(level))).toString());
+		lore.add(new StringBuilder().append(ChatColor.LIGHT_PURPLE).append("XP ").append(ChatColor.WHITE).append(getXpForLevel(Integer.valueOf(level))).toString());
 		lore.add(new StringBuilder().append(ChatColor.LIGHT_PURPLE).append("Level ").append(ChatColor.WHITE).append("0 -> ").append(level).toString());
 
 		meta.setLore(lore);
@@ -221,6 +222,10 @@ public class ItemUtil {
 	private static int getXpForLevel(int level)
 	{
 		Validate.isTrue((level >= 0) && (level <= 100000), "Invalid level " + level + "(must be in range 0.." + 100000 + ")");
+
+		if(xpTotalToReachLevel == null) {
+			initLookupTables(level * 2);
+		}
 
 		if (level >= xpTotalToReachLevel.length) {
 			initLookupTables(level * 2);

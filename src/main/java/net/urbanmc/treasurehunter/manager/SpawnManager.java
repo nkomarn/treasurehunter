@@ -6,10 +6,7 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import org.apache.commons.io.IOUtils;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -129,13 +126,21 @@ public class SpawnManager {
 					if (nearTown) {
 						continue;
 					}
+
+					if(world.getWorldBorder() != null) {
+						WorldBorder worldBorder = world.getWorldBorder();
+						if (worldBorder.getSize() > 0) {
+							if (!worldBorder.isInside(loc))
+								continue;
+						}
+					}
 				}
 
 				cont = false;
 			}
 		} while (cont);
 
-		for (Material mat = loc.getBlock().getType(); mat.equals(Material.AIR); mat = loc.getBlock().getType()) {
+		for (Material mat = loc.getBlock().getType(); mat.equals(Material.AIR) || mat.equals(Material.VOID_AIR) || mat.equals(Material.CAVE_AIR); mat = loc.getBlock().getType()) {
 			loc.subtract(0.0D, 1.0D, 0.0D);
 		}
 

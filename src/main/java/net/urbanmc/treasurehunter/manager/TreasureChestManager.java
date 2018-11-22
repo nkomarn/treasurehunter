@@ -105,12 +105,15 @@ public class TreasureChestManager {
 			}
 		}
 
-		Chest c = (Chest) chest.getBlock().getState();
+		if (chest.getBlock().getState() instanceof Chest) {
 
-		c.getBlockInventory().clear();
-		c.getBlock().setType(Material.AIR);
+			Chest c = (Chest) chest.getBlock().getState();
 
-		this.chest = null;
-		saveChest();
+			c.getBlockInventory().clear();
+			c.getBlock().setType(Material.AIR);
+
+			this.chest = null;
+			saveChest();
+		}
 	}
 }

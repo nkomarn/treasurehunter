@@ -29,7 +29,7 @@ public class THCommand implements CommandExecutor {
 		subList.add(new CancelSub());
 		subList.add(new ChestsSub());
 		subList.add(new TpSub());
-		subList.add(new ReloadSub());
+		subList.add(new ReloadSub(plugin));
 		subList.add(new StatusSub());
 	}
 

@@ -1,9 +1,8 @@
 package net.urbanmc.treasurehunter.util;
 
-import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -14,6 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ItemUtil {
 
@@ -24,7 +24,16 @@ public class ItemUtil {
 			return SpecialItemParser.handleSpecialItems(split);
 
 
-		ItemStack is = new ItemStack(Material.getMaterial(split[0].toUpperCase()));
+		Material mat = Material.getMaterial(split[0].toUpperCase());
+
+
+		if (mat == null) {
+			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading material for " + name);
+			return new ItemStack(Material.AIR);
+		}
+
+
+		ItemStack is = new ItemStack(mat);
 
 		ItemMeta meta = is.getItemMeta();
 
@@ -68,6 +77,11 @@ public class ItemUtil {
 				enchantSplit[0] = convertEnchants(enchantSplit[0]);
 
 				Enchantment ench = Enchantment.getByName(enchantSplit[0].toUpperCase());
+
+				if (ench == null) {
+					Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant for " + name);
+					return new ItemStack(Material.AIR);
+				}
 				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
 
 				meta.addEnchant(ench, level, true);

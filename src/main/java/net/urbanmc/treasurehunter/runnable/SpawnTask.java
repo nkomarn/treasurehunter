@@ -53,7 +53,13 @@ public class SpawnTask extends BukkitRunnable {
 
 		TreasureChestManager.getInstance().setCurrentChest(chest);
 
-		b.setType(Material.CHEST);
+		b.setType(Material.CHEST, true);
+
+
+		if (!(b.getState() instanceof Chest)) {
+			Bukkit.getLogger().severe("[TreasureHunter] Error spawning chest. Blockstate is not a chest! Location: " + loc.toString());
+			return;
+		}
 
 		Chest c = (Chest) b.getState();
 

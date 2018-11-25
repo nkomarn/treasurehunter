@@ -26,7 +26,9 @@ public class ConfigManager {
 		loadConfig();
 	}
 
-	public static void checkError(TreasureHunter plugin) {
+	public static void checkError() {
+		TreasureHunter plugin = TreasureHunter.getInstance();
+
 		if (getConfig() == null) {
 			plugin.error("Error loading config! Try deleting the config file.");
 		}

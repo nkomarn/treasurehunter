@@ -10,18 +10,15 @@ import org.bukkit.command.CommandSender;
 
 public class ReloadSub extends SubCommand{
 
-    private TreasureHunter plugin;
-
-    public ReloadSub(TreasureHunter plugin) {
+    public ReloadSub() {
         super("reload", Permission.RELOAD, false, false);
-        this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         ConfigManager.getInstance().reloadConfig();
         SpawnManager.getInstance().reloadConfig();
-        ItemManager.getInstance().checkError(plugin);
+        ItemManager.getInstance().checkError();
 
         sendPropMessage(sender, "command.reload");
     }

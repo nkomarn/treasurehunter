@@ -16,20 +16,18 @@ import java.util.ArrayList;
 public class THCommand implements CommandExecutor {
 
 	private ArrayList<SubCommand> subList = new ArrayList<>();
-	private TreasureHunter plugin;
 
-	public THCommand(TreasureHunter plugin) {
-		this.plugin = plugin;
+	public THCommand() {
 		registerSubs();
 	}
 
 	private void registerSubs() {
-		subList.add(new StartSub(plugin));
-		subList.add(new SpawnSub(plugin));
+		subList.add(new StartSub());
+		subList.add(new SpawnSub());
 		subList.add(new CancelSub());
 		subList.add(new ChestsSub());
 		subList.add(new TpSub());
-		subList.add(new ReloadSub(plugin));
+		subList.add(new ReloadSub());
 		subList.add(new StatusSub());
 	}
 

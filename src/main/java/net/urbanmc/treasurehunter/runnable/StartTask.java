@@ -9,19 +9,16 @@ import java.util.concurrent.TimeUnit;
 
 public class StartTask extends BukkitRunnable {
 
-	private TreasureHunter plugin;
-
-	public StartTask(TreasureHunter plugin) {
-		this.plugin = plugin;
+	public StartTask() {
 
 		long delay = calculateDelay();
 
-		runTaskLater(plugin, delay);
+		runTaskLater(TreasureHunter.getInstance(), delay);
 	}
 
 	@Override
 	public void run() {
-		SpawnTask.start(plugin);
+		SpawnTask.start();
 	}
 
 	private long calculateDelay() {

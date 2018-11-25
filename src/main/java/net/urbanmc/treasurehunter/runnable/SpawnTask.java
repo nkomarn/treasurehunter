@@ -4,15 +4,14 @@ import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.*;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class SpawnTask extends BukkitRunnable {
@@ -26,12 +25,12 @@ public class SpawnTask extends BukkitRunnable {
 		return instance;
 	}
 
-	static void start(TreasureHunter plugin) {
+	static void start() {
 		if (instance.hasBeenScheduled()) {
 			instance = new SpawnTask();
 		}
 
-		instance.runTaskTimer(plugin, 0, 72000);
+		instance.runTaskTimer(TreasureHunter.getInstance(), 0, 72000);
 	}
 
 	@Override
@@ -70,7 +69,13 @@ public class SpawnTask extends BukkitRunnable {
 
 		c.getBlockInventory().addItem(itemArray);
 
-		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.getDisplayName().toLowerCase()));
+		String typeName = type.getDisplayName().toLowerCase();
+
+		typeName = typeName.substring(0,2) + ChatColor.BOLD + typeName.substring(2);
+
+		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.equals(TreasureChestType.EPIC) ? "n" : "", typeName));
+
+		checkSpawnedTime();
 	}
 
 	private Location randomLocation(TreasureChestType type) {
@@ -108,11 +113,23 @@ public class SpawnTask extends BukkitRunnable {
 		}
 	}
 
-	public void forceSpawn(TreasureHunter plugin) {
+	public void forceSpawn() {
 		cancelTask();
 
 		instance = new SpawnTask();
 
-		instance.runTask(plugin);
+		instance.runTask(TreasureHunter.getInstance());
+	}
+
+	private void checkSpawnedTime() {
+		GregorianCalendar cal = new GregorianCalendar();
+
+		int minute = cal.get(Calendar.MINUTE);
+
+		if (minute < 3) return;
+
+		new StartTask();
+
+		cancelTask();
 	}
 }

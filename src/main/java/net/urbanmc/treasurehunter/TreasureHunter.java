@@ -17,15 +17,22 @@ public class TreasureHunter extends JavaPlugin {
 
 	private static Essentials essentials;
 	private String isError;
+	private static TreasureHunter instance;
 
 	public static Essentials getEssentials() {
 		return essentials;
+	}
+
+	public static TreasureHunter getInstance() {
+		return instance;
 	}
 
 	@Override
 	public void onEnable() {
 		if (!checkDependencies())
 			return;
+
+		instance = this;
 
 		initializeManagers();
 
@@ -46,8 +53,8 @@ public class TreasureHunter extends JavaPlugin {
 	private void initializeManagers() {
 		isError = null;
 
-		ItemManager.getInstance().checkError(this);
-		ConfigManager.checkError(this);
+		ItemManager.getInstance().checkError();
+		ConfigManager.checkError();
 	}
 
 	public void error(String error, Throwable... throwable) {
@@ -80,11 +87,11 @@ public class TreasureHunter extends JavaPlugin {
 	}
 
 	private void registerCommand() {
-		getCommand("treasurehunter").setExecutor(new THCommand(this));
+		getCommand("treasurehunter").setExecutor(new THCommand());
 	}
 
 	private void start() {
-		new StartTask(this);
+		new StartTask();
 	}
 
 	private boolean checkDependencies() {

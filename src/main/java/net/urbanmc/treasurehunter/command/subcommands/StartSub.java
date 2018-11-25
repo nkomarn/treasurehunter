@@ -24,13 +24,10 @@ public class StartSub extends SubCommand {
 
 	public static ItemStack compass;
 	private List<UUID> warned = new ArrayList<>();
-	private TreasureHunter plugin;
 	private Location spawn;
 
-	public StartSub(TreasureHunter plugin) {
+	public StartSub() {
 		super("start", Permission.START_SUB, true, false);
-
-		this.plugin = plugin;
 
 		createCompass();
 	}
@@ -84,7 +81,7 @@ public class StartSub extends SubCommand {
 	}
 
 	private void timeOut(UUID p) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(TreasureHunter.getInstance(), () -> {
 			if (warned.contains(p))
 				warned.remove(p);
 		}, 500);

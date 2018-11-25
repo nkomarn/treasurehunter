@@ -2,6 +2,7 @@ package net.urbanmc.treasurehunter.listener;
 
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
+import net.urbanmc.treasurehunter.object.TreasureChest;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,14 @@ public class InteractListener implements Listener {
 
 		if (e.getClickedBlock() != TreasureChestManager.getInstance().getCurrentChest().getBlock())
 			return;
+
+		TreasureChest treasureChest = TreasureChestManager.getInstance().getCurrentChest();
+
+		if (!treasureChest.isHunting(e.getPlayer()) && !treasureChest.isFound()) {
+			e.getPlayer().sendMessage(Messages.getString("hunting.forced-hunt"));
+			e.setCancelled(true);
+			return;
+		}
 
 		Bukkit.broadcastMessage(Messages.getString(
 				"broadcast.found",

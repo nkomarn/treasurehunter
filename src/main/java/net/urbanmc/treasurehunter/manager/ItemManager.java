@@ -35,8 +35,10 @@ public class ItemManager {
 		return instance;
 	}
 
-	public void checkError(TreasureHunter plugin) {
+	public void checkError() {
 		FileConfiguration data = YamlConfiguration.loadConfiguration(FILE);
+
+		TreasureHunter plugin = TreasureHunter.getInstance();
 
 		try {
 			loadPercentages(data);

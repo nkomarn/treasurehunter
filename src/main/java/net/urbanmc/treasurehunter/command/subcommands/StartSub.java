@@ -102,6 +102,7 @@ public class StartSub extends SubCommand {
 		p.setCompassTarget(chest.getBlock().getLocation());
 
 		if (ConfigManager.getConfig().getBoolean("disable-fly")) {
+			p.setAllowFlight(false);
 			p.setFlying(false);
 		}
 

@@ -2,14 +2,17 @@ package net.urbanmc.treasurehunter.manager;
 
 import com.earth2me.essentials.spawn.EssentialsSpawn;
 import net.urbanmc.treasurehunter.TreasureHunter;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 public class ConfigManager {
@@ -67,9 +70,8 @@ public class ConfigManager {
 				FILE.createNewFile();
 
 				InputStream input = getClass().getClassLoader().getResourceAsStream("config.yml");
-				OutputStream output = new FileOutputStream(FILE);
 
-				IOUtils.copy(input, output);
+				Files.copy(input, FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

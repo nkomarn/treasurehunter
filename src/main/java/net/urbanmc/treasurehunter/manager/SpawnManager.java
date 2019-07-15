@@ -5,12 +5,15 @@ import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -43,9 +46,8 @@ public class SpawnManager {
 				FILE.createNewFile();
 
 				InputStream input = getClass().getClassLoader().getResourceAsStream("spawns.yml");
-				OutputStream output = new FileOutputStream(FILE);
 
-				IOUtils.copy(input, output);
+				Files.copy(input, FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -6,16 +6,18 @@ import com.google.common.collect.TreeRangeMap;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import net.urbanmc.treasurehunter.util.ItemUtil;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 
 public class ItemManager {
 
@@ -64,9 +66,8 @@ public class ItemManager {
 				FILE.createNewFile();
 
 				InputStream input = getClass().getClassLoader().getResourceAsStream("items.yml");
-				OutputStream output = new FileOutputStream(FILE);
 
-				IOUtils.copy(input, output);
+				Files.copy(input, FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -99,7 +100,7 @@ public class ItemManager {
 		for (TreasureChestType type : TreasureChestType.values()) {
 			String typeName = type.name().toLowerCase();
 			List<String> itemStringList = data.getStringList("items." + typeName + ".items");
-			List<ItemStack> items = ItemUtil.getItemList(itemStringList);
+			List<ItemStack> items = ItemUtil.getItemList(itemStringList, data);
 
 			itemMap.put(type, items);
 			itemAmountMap.put(type, data.getInt("items." + typeName + ".amount"));

@@ -3,6 +3,7 @@ package net.urbanmc.treasurehunter.util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -17,11 +18,11 @@ import java.util.logging.Level;
 
 public class ItemUtil {
 
-	private static ItemStack getItem(String name) {
+	private static ItemStack getItem(String name, FileConfiguration data) {
 		String[] split = name.split(" ");
 
-		if(SpecialItemParser.isSpecialItem(split[0]))
-			return SpecialItemParser.handleSpecialItems(split);
+		if(SpecialItemParser.isSpecialItem(split[0], data))
+			return SpecialItemParser.handleSpecialItems(split, data);
 
 
 		Material mat = Material.getMaterial(split[0].toUpperCase());
@@ -153,11 +154,11 @@ public class ItemUtil {
 	}
 
 
-	public static List<ItemStack> getItemList(List<String> list) {
+	public static List<ItemStack> getItemList(List<String> list, FileConfiguration data) {
 		List<ItemStack> items = new ArrayList<>();
 
 		for (String s : list) {
-			items.add(getItem(s));
+			items.add(getItem(s, data));
 		}
 
 		return items;

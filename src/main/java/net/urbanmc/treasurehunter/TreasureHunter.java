@@ -95,6 +95,10 @@ public class TreasureHunter extends JavaPlugin {
 	}
 
 	private boolean checkDependencies() {
+		if (Bukkit.getPluginManager().getPlugin("ezAuctions") != null) {
+			registerListener(new ezAuctionListener());
+		}
+
 		essentials = getPlugin(Essentials.class);
 
 		if (essentials == null || getPlugin(EssentialsSpawn.class) == null) {

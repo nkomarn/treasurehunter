@@ -1,49 +1,119 @@
 package net.urbanmc.treasurehunter.util;
 
-import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpecialItemParser {
 
     private static int[] xpTotalToReachLevel;
 
-    public static boolean isSpecialItem(String itemName) {
-        if (Arrays.asList(
-                "bank_note",
-                "xpbottle",
-                "mcmmo_voucher",
-                "colorbook"
-        ).contains(itemName.toLowerCase())) return true;
-
-        return false;
+    public static boolean isSpecialItem(String itemName, FileConfiguration data) {
+        return data.contains("customitems." + itemName);
     }
 
-    public static ItemStack handleSpecialItems(String[] args) {
-        //Args[0] = Name; Args[1] = Amount
-        switch(args[0]) {
-            case "bank_note":
-                return generateBankNote(args[1]);
+    public static ItemStack handleSpecialItems(String[] args, FileConfiguration data) {
+        //Args[0] = Name;
 
-            case "xpbottle":
-                return generateXPBottle(args[1],args[2]);
+        //State custom item is loading
+        Bukkit.getLogger().info("[TreasureHunter] Loading custom item " + args[0]);
 
-            case "mcmmo_voucher":
-                return generateMCMMOVoucher(args[1]);
+        //Hashmap will split up arguments based on "key:value"
+        HashMap<String, String> keyValue = new HashMap<>();
 
-            case "colorbook":
-                return generateColorBook();
+        //Define a length variable so args size isn't recounted.
+        int argsLength = args.length;
 
+        //Split key:value and place them into a hashmap.
+        for (int i = 1; i < argsLength; i++) {
+            //Check if it's a key-value string
+            if (!args[i].contains(":")) continue;
+
+            String[] insideSplit = args[i].split(":");
+            if (insideSplit.length != 2) continue;
+
+            keyValue.put(insideSplit[0], insideSplit[1]);
         }
-        return null;
+
+        //Parse the item
+        return parseItem(args[0], keyValue, data);
     }
 
+
+    private static ItemStack parseItem(String customName, HashMap<String,String> keyValue, FileConfiguration data) {
+        String quickPath = "customitems." + customName + ".";
+
+        if (!data.contains(quickPath + "material")) {
+            Bukkit.getLogger().warning("No material information for custom item: " + customName);
+            return new ItemStack(Material.AIR);
+        }
+
+        String materialString = replaceString(data.getString(quickPath + "material"), keyValue);
+
+        Material material;
+        try {
+            material = Material.valueOf(materialString.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            Bukkit.getLogger().warning("Invalid material (" + materialString.toUpperCase() +  ") for custom item: " + customName);
+            return new ItemStack(Material.AIR);
+        }
+
+        String amountString = replaceString(data.getString(quickPath + "amount", ""+ 1),
+                keyValue);
+
+        int amount = 1;
+
+        try {
+            amount = Integer.valueOf(amountString);
+        } catch (NumberFormatException ex) {
+            Bukkit.getLogger().warning("Invalid amount for custom item: " + customName);
+            amount = 1;
+        }
+
+        ItemStack stack = new ItemStack(material, amount);
+
+        ItemMeta meta = stack.getItemMeta();
+
+        if (data.contains(quickPath + "name")) {
+            String displayName = replaceString(data.getString(quickPath + "name"),
+                    keyValue);
+
+            displayName = ChatColor.translateAlternateColorCodes('&', displayName);
+
+            meta.setDisplayName(displayName);
+        }
+
+        if (data.contains(quickPath + "lore")) {
+            List<String> lore = data.getStringList(quickPath + "lore");
+
+            lore = lore.stream().map(loreValue ->
+                    ChatColor.translateAlternateColorCodes('&',replaceString(loreValue, keyValue)))
+                    .collect(Collectors.toList());
+
+            meta.setLore(lore);
+        }
+
+        stack.setItemMeta(meta);
+
+        return stack;
+    }
+
+    private static String replaceString(String toReplace, HashMap<String, String> keyValue) {
+        for (String key : keyValue.keySet()) {
+            toReplace = toReplace.replaceAll("%" + key + "%", keyValue.get(key));
+        }
+
+        return toReplace;
+    }
+
+    /*
 
     private static ItemStack generateBankNote(String amount) {
         ItemStack item = new ItemStack(Material.PAPER);
@@ -99,6 +169,7 @@ public class SpecialItemParser {
 
         cbook.setItemMeta(meta);
 
+        MessageFormat.format("Hello {0}", "hi")
         return cbook;
     }
 
@@ -145,6 +216,6 @@ public class SpecialItemParser {
 
         for (int i = 0; i < xpTotalToReachLevel.length; i++)
             xpTotalToReachLevel[i] = (i >= 16 ? (int)(2.5D * i * i - 40.5D * i + 360.0D) : i >= 32 ? (int)(4.5D * i * i - 162.5D * i + 2220.0D) : i * i + 6 * i);
-    }
+    } */
 
 }

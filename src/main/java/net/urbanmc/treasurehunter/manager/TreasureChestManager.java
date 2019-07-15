@@ -5,13 +5,17 @@ import com.google.gson.GsonBuilder;
 import net.urbanmc.treasurehunter.command.subcommands.StartSub;
 import net.urbanmc.treasurehunter.gson.TreasureChestSerializer;
 import net.urbanmc.treasurehunter.object.TreasureChest;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.UUID;
@@ -46,9 +50,8 @@ public class TreasureChestManager {
 				FILE.createNewFile();
 
 				InputStream input = getClass().getClassLoader().getResourceAsStream("config.yml");
-				OutputStream output = new FileOutputStream(FILE);
 
-				IOUtils.copy(input, output);
+				Files.copy(input, FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

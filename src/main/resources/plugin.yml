@@ -1,7 +1,7 @@
 main: net.urbanmc.treasurehunter.TreasureHunter
 name: TreasureHunter
-version: 0.1
-api-version: 1.13
+version: 1.0
+api-version: 1.14
 description: Spawns chests around the world at intervals containing various loot
 authors: [Elian, Silverwolfg11]
 softdepend: [Multiverse-Core, Essentials, Towny]

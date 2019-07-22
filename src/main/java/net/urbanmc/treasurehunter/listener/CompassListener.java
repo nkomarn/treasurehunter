@@ -5,6 +5,7 @@ import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -40,13 +41,29 @@ public class CompassListener implements Listener {
 		p.setCompassTarget(TreasureChestManager.getInstance().getCurrentChest().getBlock().getLocation());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onInventoryClick(InventoryClickEvent e) {
 		ItemStack current = e.getCurrentItem(), cursor = e.getCursor();
 		Inventory inventory = e.getClickedInventory();
 
-		if ((StartSub.compass.isSimilar(current) || StartSub.compass.isSimilar(cursor)) &&
-				(inventory == null || inventory.getType() != InventoryType.PLAYER)) {
+		boolean currentHand;
+
+		if (((currentHand = StartSub.compass.isSimilar(current)) || (StartSub.compass.isSimilar(cursor))) &&
+				(inventory == null || inventory.getType() != InventoryType.PLAYER || e.getClick().isShiftClick())) {
+
+			Player player = (Player) e.getWhoClicked();
+
+			if (player.hasPermission("treasurehunter.admin")) return;
+
+			if (e.getView().getTopInventory().getType().equals(InventoryType.CRAFTING)) return;
+
+			if (currentHand) {
+				e.setCurrentItem(null);
+			} else {
+				e.getView().setCursor(null);
+			}
+			player.getInventory().addItem(StartSub.compass.clone());
+
 			e.setCancelled(true);
 		}
 	}

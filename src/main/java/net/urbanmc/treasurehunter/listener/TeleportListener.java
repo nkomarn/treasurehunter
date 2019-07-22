@@ -14,11 +14,12 @@ public class TeleportListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerTeleport(PlayerTeleportEvent e) {
-		Player p = e.getPlayer();
 		TreasureChest chest = TreasureChestManager.getInstance().getCurrentChest();
 
 		if (chest == null)
 			return;
+
+		Player p = e.getPlayer();
 
 		if (chest.isHunting(p) && !e.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			e.setCancelled(true);

@@ -57,6 +57,8 @@ public class TreasureHunter extends JavaPlugin {
 		ConfigManager.checkError();
 	}
 
+	public void resetError() { isError = null; }
+
 	public void error(String error, Throwable... throwable) {
 		isError = error;
 

@@ -27,7 +27,6 @@ public class ItemUtil {
 
 		Material mat = Material.getMaterial(split[0].toUpperCase());
 
-
 		if (mat == null) {
 			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading material for " + name);
 			return new ItemStack(Material.AIR);
@@ -42,7 +41,6 @@ public class ItemUtil {
 			if (arg.startsWith("name:")) {
 				String displayName = ChatColor.translateAlternateColorCodes('&', arg.substring(5).replace("_", " "));
 				meta.setDisplayName(ChatColor.RESET + displayName);
-
 				continue;
 			}
 
@@ -102,6 +100,12 @@ public class ItemUtil {
 				enchantSplit[0] = convertEnchants(enchantSplit[0]);
 
 				Enchantment ench = Enchantment.getByName(enchantSplit[0].toUpperCase());
+
+				if (ench == null) {
+					Bukkit.getLogger().warning("Cannot parse enchantment book " + enchantSplit[0] + " for item " + mat.name());
+					continue;
+				}
+
 				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
 
 				bookMeta.addStoredEnchant(ench, level, true);
@@ -114,6 +118,11 @@ public class ItemUtil {
 				String[] effectSplit = effect.split("/");
 
 				PotionEffectType effectType = PotionEffectType.getByName(effectSplit[0].toUpperCase());
+
+				if (effectType == null) {
+					Bukkit.getLogger().warning("Cannot parse potion effect " + effectSplit[0] + " for item " + mat.name());
+					continue;
+				}
 
 				int level = effectSplit.length < 2 ? 1 : Integer.parseInt(effectSplit[1]);
 				int duration = effectSplit.length < 3 ? 1 : Integer.parseInt(effectSplit[2]);

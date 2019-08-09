@@ -16,6 +16,7 @@ public class ReloadSub extends SubCommand{
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        TreasureHunter.getInstance().resetError();
         ConfigManager.getInstance().reloadConfig();
         SpawnManager.getInstance().reloadConfig();
         ItemManager.getInstance().checkError();

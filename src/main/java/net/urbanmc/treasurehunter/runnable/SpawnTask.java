@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.runnable;
 
+import io.papermc.lib.PaperLib;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.*;
 import net.urbanmc.treasurehunter.object.TreasureChest;
@@ -44,52 +45,25 @@ public class SpawnTask extends BukkitRunnable {
 			return;
 		}
 
+		final double[] worldBorder;
+
+		if (world.getWorldBorder() != null && world.getWorldBorder().getSize() > 0) {
+			Location centerLoc = world.getWorldBorder().getCenter();
+			int centerX = centerLoc.getBlockX(), centerZ = centerLoc.getBlockZ();
+			double size = world.getWorldBorder().getSize();
+
+			worldBorder = new double[4];
+			worldBorder[0] = centerX + size;
+			worldBorder[1] = centerX - size;
+			worldBorder[2] = centerZ + size;
+			worldBorder[3] = centerZ - size;
+		} else
+			worldBorder = null;
+
 		//Run the async generation
 		Bukkit.getScheduler().runTaskAsynchronously(TreasureHunter.getInstance(), () -> {
-			generateChestAndItems(world);
+			generateChestAndItems(world.getName(), worldBorder);
 		});
-
-		/* TreasureChestManager.getInstance().removeCurrentChest();
-
-		TreasureChestType type = randomType();
-
-		Location loc = randomLocation(type);
-
-		if (loc == null) {
-			Bukkit.getLogger().severe("[TreasureHunter] Error generating location for chest!");
-			return;
-		}
-
-		Block b = loc.getBlock();
-
-		TreasureChest chest = new TreasureChest(type, b);
-
-		TreasureChestManager.getInstance().setCurrentChest(chest);
-
-		b.setType(Material.CHEST, true);
-
-
-		if (!(b.getState() instanceof Chest)) {
-			Bukkit.getLogger().severe("[TreasureHunter] Error spawning chest. Blockstate is not a chest! Location: " + loc.toString());
-			return;
-		}
-
-		Chest c = (Chest) b.getState();
-
-		List<ItemStack> items = getItems(type);
-
-		ItemStack[] itemArray = new ItemStack[items.size()];
-		itemArray = items.toArray(itemArray);
-
-		c.getBlockInventory().addItem(itemArray);
-
-		String typeName = type.getDisplayName().toLowerCase();
-
-		typeName = typeName.substring(0,2) + ChatColor.BOLD + typeName.substring(2);
-
-		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.equals(TreasureChestType.EPIC) ? "n" : "", typeName));
-
-		checkSpawnedTime(); */
 	}
 
 	private TreasureChestType randomType() {
@@ -142,12 +116,12 @@ public class SpawnTask extends BukkitRunnable {
 	}
 
 
-	private void generateChestAndItems(World world) {
+	private void generateChestAndItems(String worldName, double[] worldBorder) {
 		//Get type
 		TreasureChestType type = randomType();
 
 		//Get x and z cords
-		int[] xZ = SpawnManager.getInstance().generateLocationAsync(world, type);
+		int[] xZ = SpawnManager.getInstance().generateLocationAsync(worldName, worldBorder, type);
 
 		//Get items list
 		List<ItemStack> items = getItems(type);
@@ -156,7 +130,15 @@ public class SpawnTask extends BukkitRunnable {
 		ItemStack[] itemArray = items.toArray(new ItemStack[0]);
 
 		//Run the sync spawn task
-		Bukkit.getScheduler().runTask(TreasureHunter.getInstance(), () -> runSyncTask(world, xZ[0], xZ[1], type, itemArray));
+		Bukkit.getScheduler().runTask(TreasureHunter.getInstance(), () -> runChunkGet(worldName, xZ[0], xZ[1], type, itemArray));
+	}
+
+	private void runChunkGet(String worldName, int x, int z, TreasureChestType type, ItemStack[] items) {
+		final World world = Bukkit.getWorld(worldName);
+
+		PaperLib.getChunkAtAsync(world, x, z).thenRun(() ->
+				runSyncTask(world, x, z, type, items)
+		);
 	}
 
 	private void runSyncTask(World world, int x, int z, TreasureChestType type, ItemStack[] items) {

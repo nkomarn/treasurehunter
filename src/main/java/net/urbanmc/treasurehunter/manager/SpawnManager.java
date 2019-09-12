@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.manager;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
@@ -153,45 +154,51 @@ public class SpawnManager {
 		return loc;
 	}
 
-	public int[] generateLocationAsync(World world, TreasureChestType type) {
-		//Initialize these before async
+	public int[] generateLocationAsync(String worldName, double[] worldBorder, TreasureChestType type) {
 		String prefix = type.name().toLowerCase() + ".";
-		//Location loc = null;
-		boolean cont = true;
-		int timeout = 0;
+
 		Random random = ThreadLocalRandom.current();
+
+		// Get config values
 		int xRange = data.getInt(prefix + "range-x");
 		int zRange = data.getInt(prefix + "range-z");
 		int chunkRange = data.getInt(prefix + "range-chunk");
 		int noZoneX = data.getInt(prefix + "nozone-x");
 		int noZoneZ = data.getInt(prefix + "nozone-z");
+
 		int noZoneNegativeX = 0 - noZoneX;
 		int noZoneNegativeZ = 0 - noZoneZ;
+
 		int[] xZ = new int[2];
 
 		//Set up worldborder
 		boolean hasWorldBorder = false;
 		double wbMaxX = 0,wbMaxZ = 0,wbMinX = 0,wbMinZ = 0;
 
-		if (world.getWorldBorder() != null) {
-			WorldBorder worldBorder = world.getWorldBorder();
-			if (worldBorder.getSize() > 0) {
-				hasWorldBorder = true;
-				double size = worldBorder.getSize();
-				int centerX = worldBorder.getCenter().getBlockX() , centerZ = worldBorder.getCenter().getBlockZ();
-				wbMaxX = centerX + size;
-				wbMaxZ = centerZ + size;
-				wbMinX = centerX - size;
-				wbMinZ = centerZ - size;
-			}
+		if ((hasWorldBorder = worldBorder != null)) {
+			wbMaxX = worldBorder[0];
+			wbMinX = worldBorder[1];
+			wbMaxZ = worldBorder[2];
+			wbMinZ = worldBorder[3];
 		}
 
+		// Check if a towny world exists for the world
+		boolean hasTownyWorld = true;
+
+		TownyWorld townyWorld = null;
+		try {
+			townyWorld = TownyAPI.getInstance().getDataSource().getWorld(worldName);
+		} catch (NotRegisteredException var24) {
+			hasTownyWorld = false;
+		}
+
+		// Establish loop variables
+		boolean cont = true;
+		int timeout = 0;
+
 		do {
+			// Increment time out
 			++timeout;
-			if (timeout == 50) {
-				Bukkit.getLogger().warning("[TreasureHunter] Location generation timed out!");
-				return null;
-			}
 
 			int x = random.nextInt(xRange * 2) - xRange;
 			int z = random.nextInt(zRange * 2) - zRange;
@@ -202,7 +209,7 @@ public class SpawnManager {
 				if (chunkRange > 0) {
 					int cx = x >> 4;
 					int cz = z >> 4;
-					ArrayList<Coord> borders = new ArrayList<>();
+					ArrayList<Coord> borders = new ArrayList<>(chunkRange * 8);
 					borders.add(new Coord(cx, cz));
 
 					for (int i = 1; i < chunkRange + 1; ++i) {
@@ -216,46 +223,40 @@ public class SpawnManager {
 						borders.add(new Coord(cx - i, cz + i));
 					}
 
-					boolean nearTown = false;
-
 					xZ[0] = x;
 					xZ[1] = z;
 
-					TownyWorld townyWorld;
-					try {
-						townyWorld = TownyUniverse.getDataSource().getWorld(world.getName());
-					} catch (NotRegisteredException var24) {
-						return xZ;
-					}
+					//Location inside worldborder
+					if (hasWorldBorder && (x > wbMaxX || x < wbMinX || z > wbMaxZ || x < wbMinZ)) continue;
 
-					Iterator var21 = borders.iterator();
+					if (!hasTownyWorld) continue;
 
-					while (var21.hasNext()) {
-						Coord key = (Coord) var21.next();
+					boolean nearTown = false;
+
+					for (Coord key : borders) {
 						try {
+							// TownyBlocks are stored in a hashtable which is synchronized
 							if (townyWorld.hasTownBlock(key)) {
 								nearTown = true;
 								break;
 							}
 						} catch (Exception e) {
-							// Catch any concurrency issues. Should be relatively thread safe as we are not fetching data,
-							// just checking for containment.
+							// Check for any exceptions
 							Bukkit.getLogger().warning("[TreasureHunter] Exception caught while async checking town block location.");
 						}
 					}
 
-					if (nearTown) {
-						continue;
-					}
-
-					//Location inside worldborder
-					if (hasWorldBorder && (x > wbMaxX || x < wbMinX || z > wbMaxZ || x < wbMinZ)) continue;
-
+					if (nearTown) continue;
 				}
 
 				cont = false;
 			}
-		} while (cont);
+		} while (cont && timeout < 50);
+
+		if (timeout == 50) {
+			Bukkit.getLogger().warning("[TreasureHunter] Location generation timed out!");
+			return null;
+		}
 
 		return xZ;
 	}

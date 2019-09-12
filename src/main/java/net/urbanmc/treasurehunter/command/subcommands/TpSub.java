@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
+import io.papermc.lib.PaperLib;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
@@ -20,7 +21,10 @@ public class TpSub extends SubCommand {
 
 		loc.add(0, 2, 0);
 
-		((Player) sender).teleport(loc);
+		if (!(sender instanceof Player))
+			return;
+
+		PaperLib.teleportAsync((Player) sender, loc);
 
 		sendPropMessage(sender, "command.tp");
 	}

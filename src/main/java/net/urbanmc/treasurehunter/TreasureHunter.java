@@ -1,12 +1,14 @@
 package net.urbanmc.treasurehunter;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.spawn.EssentialsSpawn;
 import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.*;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.ItemManager;
-import net.urbanmc.treasurehunter.runnable.StartTask;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +20,7 @@ public class TreasureHunter extends JavaPlugin {
 	private static Essentials essentials;
 	private String isError;
 	private static TreasureHunter instance;
+	private TaskChainFactory taskChainFactory;
 
 	public static Essentials getEssentials() {
 		return essentials;
@@ -33,6 +36,7 @@ public class TreasureHunter extends JavaPlugin {
 			return;
 
 		instance = this;
+		taskChainFactory = BukkitTaskChainFactory.create(this);
 
 		initializeManagers();
 
@@ -41,8 +45,6 @@ public class TreasureHunter extends JavaPlugin {
 
 		if (isError()) { // The manager class should print the error reason
 			getLogger().info("Cannot start task due to errors. " + isError);
-		} else {
-			start();
 		}
 	}
 
@@ -82,6 +84,7 @@ public class TreasureHunter extends JavaPlugin {
 		registerListener(new FlyListener());
 		registerListener(new GodListener());
 		registerListener(new TeleportListener());
+		registerListener(new HourListener());
 	}
 
 	private void registerListener(Listener l) {
@@ -90,10 +93,6 @@ public class TreasureHunter extends JavaPlugin {
 
 	private void registerCommand() {
 		getCommand("treasurehunter").setExecutor(new THCommand());
-	}
-
-	private void start() {
-		new StartTask();
 	}
 
 	private boolean checkDependencies() {
@@ -112,4 +111,9 @@ public class TreasureHunter extends JavaPlugin {
 			return true;
 		}
 	}
+
+	public <T> TaskChain<T> newChain() {
+		return taskChainFactory.newChain();
+	}
+
 }

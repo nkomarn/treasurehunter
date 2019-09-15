@@ -1,5 +1,8 @@
 package net.urbanmc.treasurehunter.runnable;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import io.papermc.lib.PaperLib;
 import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.*;
@@ -16,54 +19,69 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 
-public class SpawnTask extends BukkitRunnable {
-
-	private static SpawnTask instance = new SpawnTask();
-
-	private SpawnTask() {
-	}
-
-	public static SpawnTask getInstance() {
-		return instance;
-	}
-
-	static void start() {
-		if (instance.hasBeenScheduled()) {
-			instance = new SpawnTask();
-		}
-
-		instance.runTaskTimer(TreasureHunter.getInstance(), 0, 72000);
-	}
+public class SpawnTask implements Runnable {
 
 	@Override
 	public void run() {
-		//Get the world synchronously
-		World world = Bukkit.getWorld(ConfigManager.getConfig().getString("world"));
+		TaskChain<?> chain = TreasureHunter.getInstance().newChain();
 
-		if (world == null) {
-			Bukkit.getLogger().severe("[TreasureHunter] Invalid world for spawn location!");
-			return;
-		}
+		chain.sync(() -> {
+			World world = Bukkit.getWorld(ConfigManager.getConfig().getString("world"));
 
-		final double[] worldBorder;
+			if (world == null) {
+				Bukkit.getLogger().severe("[TreasureHunter] Invalid world for spawn location!");
+				return;
+			}
 
-		if (world.getWorldBorder() != null && world.getWorldBorder().getSize() > 0) {
-			Location centerLoc = world.getWorldBorder().getCenter();
-			int centerX = centerLoc.getBlockX(), centerZ = centerLoc.getBlockZ();
-			double size = world.getWorldBorder().getSize();
+			final double[] worldBorder;
 
-			worldBorder = new double[4];
-			worldBorder[0] = centerX + size;
-			worldBorder[1] = centerX - size;
-			worldBorder[2] = centerZ + size;
-			worldBorder[3] = centerZ - size;
-		} else
-			worldBorder = null;
+			if (world.getWorldBorder() != null && world.getWorldBorder().getSize() > 0) {
+				Location centerLoc = world.getWorldBorder().getCenter();
+				int centerX = centerLoc.getBlockX(), centerZ = centerLoc.getBlockZ();
+				double size = world.getWorldBorder().getSize();
 
-		//Run the async generation
-		Bukkit.getScheduler().runTaskAsynchronously(TreasureHunter.getInstance(), () -> {
-			generateChestAndItems(world.getName(), worldBorder);
-		});
+				worldBorder = new double[4];
+				worldBorder[0] = centerX + size;
+				worldBorder[1] = centerX - size;
+				worldBorder[2] = centerZ + size;
+				worldBorder[3] = centerZ - size;
+			} else
+				worldBorder = null;
+
+			chain.setTaskData("world", world);
+			chain.setTaskData("worldName", world.getName());
+			chain.setTaskData("worldborder", worldBorder);
+		}).async(() -> {
+			TreasureChestType type = randomType();
+
+
+			//Get x and z cords
+			int[] xZ = SpawnManager.getInstance().generateLocationAsync(
+					chain.getTaskData("worldName"), chain.getTaskData("worldBorder"), type);
+
+			chain.removeTaskData("worldName");
+			chain.removeTaskData("worldBorder");
+
+			//Get items list
+			ItemStack[] itemArray = getItems(type).toArray(new ItemStack[0]);
+
+			chain.setTaskData("type", type);
+			chain.setTaskData("x", xZ[0]);
+			chain.setTaskData("z", xZ[1]);
+			chain.setTaskData("items", itemArray);
+		}).sync(() -> {
+			PaperLib.getChunkAtAsync(
+					chain.getTaskData("world"),
+					chain.getTaskData("x"),
+					chain.getTaskData("z"))
+					.thenRun(() -> {
+						runSyncTask(chain.getTaskData("world"),
+								chain.getTaskData("x"),
+								chain.getTaskData("z"),
+								chain.getTaskData("type"),
+								chain.getTaskData("items"));
+					});
+		}).execute();
 	}
 
 	private TreasureChestType randomType() {
@@ -72,73 +90,6 @@ public class SpawnTask extends BukkitRunnable {
 
 	private List<ItemStack> getItems(TreasureChestType type) {
 		return ItemManager.getInstance().getRandomItemsForChestType(type);
-	}
-
-	private boolean hasBeenScheduled() {
-		try {
-			instance.getTaskId();
-			return true;
-		} catch (IllegalStateException ex) {
-			return false;
-		}
-	}
-
-	/*
-	 * @return true if successfully; false if error (such as never started)
-	 */
-	private boolean cancelTask() {
-		try {
-			cancel();
-			return true;
-		} catch (IllegalStateException ex) {
-			return false;
-		}
-	}
-
-	public void forceSpawn() {
-		cancelTask();
-
-		instance = new SpawnTask();
-
-		instance.runTask(TreasureHunter.getInstance());
-	}
-
-	private void checkSpawnedTime() {
-		GregorianCalendar cal = new GregorianCalendar();
-
-		int minute = cal.get(Calendar.MINUTE);
-
-		if (minute < 3) return;
-
-		new StartTask();
-
-		cancelTask();
-	}
-
-
-	private void generateChestAndItems(String worldName, double[] worldBorder) {
-		//Get type
-		TreasureChestType type = randomType();
-
-		//Get x and z cords
-		int[] xZ = SpawnManager.getInstance().generateLocationAsync(worldName, worldBorder, type);
-
-		//Get items list
-		List<ItemStack> items = getItems(type);
-
-		//Get the items array
-		ItemStack[] itemArray = items.toArray(new ItemStack[0]);
-
-		//Run the sync spawn task
-		Bukkit.getScheduler().runTask(TreasureHunter.getInstance(), () -> runChunkGet(worldName, xZ[0], xZ[1], type, itemArray));
-	}
-
-	private void runChunkGet(String worldName, int x, int z, TreasureChestType type, ItemStack[] items) {
-		final World world = Bukkit.getWorld(worldName);
-
-		PaperLib.getChunkAtAsync(world, x, z).thenRun(() ->
-				runSyncTask(world, x, z, type, items)
-		);
 	}
 
 	private void runSyncTask(World world, int x, int z, TreasureChestType type, ItemStack[] items) {
@@ -190,7 +141,5 @@ public class SpawnTask extends BukkitRunnable {
 		typeName = typeName.substring(0,2) + ChatColor.BOLD + typeName.substring(2);
 
 		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.equals(TreasureChestType.EPIC) ? "n" : "", typeName));
-
-		checkSpawnedTime();
 	}
 }

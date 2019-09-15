@@ -72,6 +72,11 @@
             <version>1.2</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.Silverwolfg11</groupId>
+            <artifactId>TimerLib</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!-- PaperLib Dependency !-->
         <dependency>
             <groupId>io.papermc</groupId>
@@ -92,9 +97,16 @@
                     <relocations>
                         <relocation>
                             <pattern>io.papermc.lib</pattern>
-                            <shadedPattern>com.palmergames.paperlib</shadedPattern> <!-- Replace this -->
+                            <shadedPattern>net.urbanmc.paperlib</shadedPattern> <!-- Replace this -->
                         </relocation>
                     </relocations>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>me.Silverwolfg11:TimerLib</exclude>
+                            <exclude>co.aikar:taskchain-bukkit</exclude>
+                            <exclude>co.aikar:taskchain-core</exclude>
+                        </excludes>
+                    </artifactSet>
                 </configuration>
                 <executions>
                     <execution>

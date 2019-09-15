@@ -22,7 +22,7 @@ public class SpawnSub extends SubCommand {
 			return;
 		}
 
-		SpawnTask.getInstance().forceSpawn();
+		new SpawnTask().run();
 
         /* Basically this command is for admins to force spawn a treasure chest.
         I guess you could parse some arguments about chest type but mainly just force spawning a chest.

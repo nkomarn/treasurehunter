@@ -4,6 +4,7 @@ import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
@@ -47,6 +48,9 @@ public class ChestListener implements Listener {
 
 			String name = e.getPlayer().getName(), chestType = chest.getType().getDisplayName();
 			Bukkit.broadcastMessage(Messages.getString("broadcast.found", name, chestType));
+
+			// Helpful Message
+			e.getPlayer().sendMessage(ChatColor.GREEN + "To stop hunting the chest do /th cancel!");
 		}
 	}
 }

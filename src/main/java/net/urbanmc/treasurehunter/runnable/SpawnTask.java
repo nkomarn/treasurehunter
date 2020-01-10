@@ -140,6 +140,6 @@ public class SpawnTask implements Runnable {
 
 		typeName = typeName.substring(0,2) + ChatColor.BOLD + typeName.substring(2);
 
-		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type.equals(TreasureChestType.EPIC) ? "n" : "", typeName));
+		Bukkit.broadcastMessage(Messages.getString("broadcast.start", type == TreasureChestType.EPIC ? "n" : "", typeName));
 	}
 }

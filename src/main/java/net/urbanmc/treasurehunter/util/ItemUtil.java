@@ -3,6 +3,7 @@ package net.urbanmc.treasurehunter.util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -73,14 +74,13 @@ public class ItemUtil {
 				String enchant = arg.substring(8);
 				String[] enchantSplit = enchant.split("/");
 
-				enchantSplit[0] = convertEnchants(enchantSplit[0]);
-
-				Enchantment ench = Enchantment.getByName(enchantSplit[0].toUpperCase());
+				Enchantment ench = getEnchantment(enchantSplit[0]);
 
 				if (ench == null) {
-					Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant for " + name);
+					Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant " + enchantSplit[0] + " for " + name);
 					return new ItemStack(Material.AIR);
 				}
+
 				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
 
 				meta.addEnchant(ench, level, true);
@@ -97,9 +97,7 @@ public class ItemUtil {
 
 				EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
 
-				enchantSplit[0] = convertEnchants(enchantSplit[0]);
-
-				Enchantment ench = Enchantment.getByName(enchantSplit[0].toUpperCase());
+				Enchantment ench = getEnchantment(enchantSplit[0]);
 
 				if (ench == null) {
 					Bukkit.getLogger().warning("Cannot parse enchantment book " + enchantSplit[0] + " for item " + mat.name());
@@ -142,6 +140,17 @@ public class ItemUtil {
 		is.setItemMeta(meta);
 
 		return is;
+	}
+
+	private static Enchantment getEnchantment(String enchantmentName) {
+		enchantmentName = convertEnchants(enchantmentName.toLowerCase());
+
+		Enchantment ench = Enchantment.getByName(enchantmentName.toUpperCase());
+
+		if (ench == null)
+			ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentName.toLowerCase()));
+
+		return ench;
 	}
 
 	private static String convertEnchants(String s) {

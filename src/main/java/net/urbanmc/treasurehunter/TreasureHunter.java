@@ -64,9 +64,10 @@ public class TreasureHunter extends JavaPlugin {
 	public void error(String error, Throwable... throwable) {
 		isError = error;
 
-		if (throwable == null) Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error);
-
-		else Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error, throwable);
+		if (throwable == null)
+			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error);
+		else
+			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] " + error, throwable);
 	}
 
 	public boolean isError() {

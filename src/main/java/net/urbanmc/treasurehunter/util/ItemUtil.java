@@ -25,14 +25,12 @@ public class ItemUtil {
 		if(SpecialItemParser.isSpecialItem(split[0], data))
 			return SpecialItemParser.handleSpecialItems(split, data);
 
-
 		Material mat = Material.getMaterial(split[0].toUpperCase());
 
 		if (mat == null) {
 			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading material for " + name);
 			return null;
 		}
-
 
 		ItemStack is = new ItemStack(mat);
 
@@ -43,7 +41,6 @@ public class ItemUtil {
 				String displayName = ChatColor.translateAlternateColorCodes('&', arg.substring(5).replace("_", " "));
 				meta.setDisplayName(ChatColor.RESET + displayName);
 			}
-
 			else if (arg.startsWith("lore:")) {
 				String lore = ChatColor.translateAlternateColorCodes('&', arg.substring(5).replace("_", " "));
 
@@ -59,12 +56,10 @@ public class ItemUtil {
 
 				meta.setLore(loreList);
 			}
-
 			else if (arg.startsWith("amount:")) {
 				int amount = Integer.parseInt(arg.substring(7));
 				is.setAmount(amount);
 			}
-
 			else if (arg.startsWith("enchant:")) {
 				String enchant = arg.substring(8);
 				String[] enchantSplit = enchant.split("/");
@@ -80,7 +75,6 @@ public class ItemUtil {
 
 				meta.addEnchant(ench, level, true);
 			}
-
 			else if (arg.startsWith("book:")) {
 				String enchant = arg.substring(5);
 				String[] enchantSplit = enchant.split("/");
@@ -101,7 +95,6 @@ public class ItemUtil {
 
 				bookMeta.addStoredEnchant(ench, level, true);
 			}
-
 			else if (arg.startsWith("effect:")) {
 				String effect = arg.substring(7);
 				String[] effectSplit = effect.split("/");
@@ -120,13 +113,14 @@ public class ItemUtil {
 
 				potionMeta.addCustomEffect(new PotionEffect(effectType, duration, level), true);
 			}
-
 			else if (arg.startsWith("durability:")) {
 				short durability = Short.parseShort(arg.substring(11));
 				is.setDurability(durability);
 			}
-
-			Bukkit.getLogger().warning("[TreasureHunter] Unknown argument encountered: " + arg + " while parsing item " + name);
+			else {
+				// Log unknown argument
+				Bukkit.getLogger().warning("[TreasureHunter] Unknown argument encountered: " + arg + " while parsing item " + name);
+			}
 		}
 
 		is.setItemMeta(meta);

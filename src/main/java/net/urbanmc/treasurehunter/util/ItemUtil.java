@@ -59,93 +59,114 @@ public class ItemUtil {
 		ItemMeta meta = is.getItemMeta();
 
 		for (int i = 1; i < split.length; ++i) {
-			String arg = split[i];
+			String fullArgument = split[i];
+			// Get split property
+			int splitCharIndex = fullArgument.indexOf(':');
 
-			if (arg.startsWith("name:")) {
-				String displayName = ChatColor.translateAlternateColorCodes('&', arg.substring(5).replace("_", " "));
-				meta.setDisplayName(ChatColor.RESET + displayName);
+			if (splitCharIndex == -1 || splitCharIndex == (fullArgument.length() - 1)) {
+				// Log unknown argument
+				Bukkit.getLogger().warning("[TreasureHunter] Unknown argument encountered: " + fullArgument + " while parsing item " + name);
+				continue;
 			}
-			else if (arg.startsWith("lore:")) {
-				String lore = ChatColor.translateAlternateColorCodes('&', arg.substring(5).replace("_", " "));
 
-				List<String> loreList;
+			String property = fullArgument.substring(0, splitCharIndex);
+			String value = fullArgument.substring(splitCharIndex + 1);
 
-				if (!meta.hasLore()) {
-					loreList = new ArrayList<>();
-				} else {
-					loreList = meta.getLore();
+			switch (property.toLowerCase()) {
+				case "name":
+					String displayName = ChatColor.translateAlternateColorCodes('&', value.replace("_", " "));
+					meta.setDisplayName(ChatColor.RESET + displayName);
+					break;
+
+				case "lore":
+					String lore = ChatColor.translateAlternateColorCodes('&', value.replace("_", " "));
+
+					List<String> loreList;
+
+					if (!meta.hasLore()) {
+						loreList = new ArrayList<>();
+					} else {
+						loreList = meta.getLore();
+					}
+
+					loreList.add(lore);
+
+					meta.setLore(loreList);
+					break;
+
+				case "amount":
+					int amount = Integer.parseInt(value);
+					is.setAmount(amount);
+					break;
+
+				case"enchant": {
+					String[] enchantSplit = value.split("/");
+
+					Enchantment ench = getEnchantment(enchantSplit[0]);
+
+					if (ench == null) {
+						Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant " + enchantSplit[0] + " for " + name);
+						continue;
+					}
+
+					int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
+
+					meta.addEnchant(ench, level, true);
+					break;
 				}
 
-				loreList.add(lore);
+				case "book": {
+					String[] enchantSplit = value.split("/");
 
-				meta.setLore(loreList);
-			}
-			else if (arg.startsWith("amount:")) {
-				int amount = Integer.parseInt(arg.substring(7));
-				is.setAmount(amount);
-			}
-			else if (arg.startsWith("enchant:")) {
-				String enchant = arg.substring(8);
-				String[] enchantSplit = enchant.split("/");
+					if (!(meta instanceof EnchantmentStorageMeta))
+						continue;
 
-				Enchantment ench = getEnchantment(enchantSplit[0]);
+					EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
 
-				if (ench == null) {
-					Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant " + enchantSplit[0] + " for " + name);
-					continue;
+					Enchantment ench = getEnchantment(enchantSplit[0]);
+
+					if (ench == null) {
+						Bukkit.getLogger().warning("[TreasureHunter] Cannot parse enchantment book " + enchantSplit[0] + " for item " + mat.name());
+						continue;
+					}
+
+					int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
+
+					bookMeta.addStoredEnchant(ench, level, true);
+					break;
 				}
 
-				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
+				case "effect":
+					String[] effectSplit = value.split("/");
 
-				meta.addEnchant(ench, level, true);
+					PotionEffectType effectType = PotionEffectType.getByName(effectSplit[0].toUpperCase());
+
+					if (effectType == null) {
+						Bukkit.getLogger().warning("Cannot parse potion effect " + effectSplit[0] + " for item " + mat.name());
+						continue;
+					}
+
+					int level = effectSplit.length < 2 ? 1 : Integer.parseInt(effectSplit[1]);
+					int duration = effectSplit.length < 3 ? 1 : Integer.parseInt(effectSplit[2]);
+
+					PotionMeta potionMeta = (PotionMeta) meta;
+
+					potionMeta.addCustomEffect(new PotionEffect(effectType, duration, level), true);
+					break;
+
+				case "durability":
+					short durability = Short.parseShort(value);
+					is.setDurability(durability);
+					break;
+
+				case "color":
+					handleColor(meta, value);
+					break;
+				default:
+					// Log unknown argument
+					Bukkit.getLogger().warning("[TreasureHunter] Unknown property encountered: " + property + " while parsing item " + name);
+					break;
 			}
-			else if (arg.startsWith("book:")) {
-				String enchant = arg.substring(5);
-				String[] enchantSplit = enchant.split("/");
-
-				if (!(meta instanceof EnchantmentStorageMeta))
-					continue;
-
-				EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
-
-				Enchantment ench = getEnchantment(enchantSplit[0]);
-
-				if (ench == null) {
-					Bukkit.getLogger().warning("Cannot parse enchantment book " + enchantSplit[0] + " for item " + mat.name());
-					continue;
-				}
-
-				int level = enchantSplit.length == 1 ? 1 : Integer.parseInt(enchantSplit[1]);
-
-				bookMeta.addStoredEnchant(ench, level, true);
-			}
-			else if (arg.startsWith("effect:")) {
-				String effect = arg.substring(7);
-				String[] effectSplit = effect.split("/");
-
-				PotionEffectType effectType = PotionEffectType.getByName(effectSplit[0].toUpperCase());
-
-				if (effectType == null) {
-					Bukkit.getLogger().warning("Cannot parse potion effect " + effectSplit[0] + " for item " + mat.name());
-					continue;
-				}
-
-				int level = effectSplit.length < 2 ? 1 : Integer.parseInt(effectSplit[1]);
-				int duration = effectSplit.length < 3 ? 1 : Integer.parseInt(effectSplit[2]);
-
-				PotionMeta potionMeta = (PotionMeta) meta;
-
-				potionMeta.addCustomEffect(new PotionEffect(effectType, duration, level), true);
-			}
-			else if (arg.startsWith("durability:")) {
-				short durability = Short.parseShort(arg.substring(11));
-				is.setDurability(durability);
-			}
-			else if (arg.startsWith("color:")) {
-				handleColor(is, arg.substring(6));
-			}
-			// Log unknown argument
-			Bukkit.getLogger().warning("[TreasureHunter] Unknown argument encountered: " + arg + " while parsing item " + name);
 		}
 
 		is.setItemMeta(meta);
@@ -153,9 +174,8 @@ public class ItemUtil {
 		return is;
 	}
 
-	private static void handleColor(ItemStack is, String colorString) {
-		ItemMeta meta = is.getItemMeta();
-		if (is.getItemMeta() instanceof LeatherArmorMeta) {
+	private static void handleColor(ItemMeta meta, String colorString) {
+		if (meta instanceof LeatherArmorMeta) {
 			Color color;
 
 			if (colorString.charAt(0) == '#')
@@ -164,11 +184,9 @@ public class ItemUtil {
 				color = fromColorName(colorString);
 
 			((LeatherArmorMeta) meta).setColor(color);
-			is.setItemMeta(meta);
 		}
 		else {
-			Bukkit.getLogger().warning("[TreasureHunter] Cannot apply leather armor color to material type: "
-					+ is.getType().name() + "!");
+			Bukkit.getLogger().warning("[TreasureHunter] Cannot apply leather armor color to material type!");
 		}
 	}
 

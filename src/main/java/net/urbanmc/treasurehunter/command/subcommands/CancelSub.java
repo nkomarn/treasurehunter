@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.command.subcommands;
 
+import net.urbanmc.treasurehunter.TreasureHunter;
 import net.urbanmc.treasurehunter.manager.Messages;
 import net.urbanmc.treasurehunter.manager.TreasureChestManager;
 import net.urbanmc.treasurehunter.object.Permission;
@@ -35,6 +36,8 @@ public class CancelSub extends SubCommand {
 
 		chest.getCancelled().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();
+
+		TreasureHunter.getInstance().getViewDistanceUtil().resetPlayerViewDistance(p);
 
 		sender.sendMessage(Messages.getString("command.cancel.cancelled"));
 	}

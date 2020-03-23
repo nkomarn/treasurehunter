@@ -35,7 +35,7 @@ items:
     items:
     - 'diamond_sword name:God_Sword enchant:damage_all/100 durability:1'
 
-//All values must be strings in order to validate placeholders.
+# All values must be strings in order to validate placeholders.
 customitems:
   bank_notes:
     material: paper

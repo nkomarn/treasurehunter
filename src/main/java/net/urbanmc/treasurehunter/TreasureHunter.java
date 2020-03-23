@@ -9,6 +9,7 @@ import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.*;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.ItemManager;
+import net.urbanmc.treasurehunter.util.ViewDistanceUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +22,7 @@ public class TreasureHunter extends JavaPlugin {
 	private String isError;
 	private static TreasureHunter instance;
 	private TaskChainFactory taskChainFactory;
+	private ViewDistanceUtil viewDistanceUtil;
 
 	public static Essentials getEssentials() {
 		return essentials;
@@ -37,6 +39,9 @@ public class TreasureHunter extends JavaPlugin {
 
 		instance = this;
 		taskChainFactory = BukkitTaskChainFactory.create(this);
+
+		// Create view distance helper
+		viewDistanceUtil = new ViewDistanceUtil();
 
 		initializeManagers();
 
@@ -115,6 +120,10 @@ public class TreasureHunter extends JavaPlugin {
 
 	public <T> TaskChain<T> newChain() {
 		return taskChainFactory.newChain();
+	}
+
+	public ViewDistanceUtil getViewDistanceUtil() {
+		return viewDistanceUtil;
 	}
 
 }

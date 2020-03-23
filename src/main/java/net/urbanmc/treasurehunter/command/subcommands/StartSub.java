@@ -109,6 +109,8 @@ public class StartSub extends SubCommand {
 		if (ConfigManager.getConfig().getBoolean("disable-god")) {
 			TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
 		}
+
+		TreasureHunter.getInstance().getViewDistanceUtil().setPlayerViewDistance(p, 2);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -136,17 +138,19 @@ public class StartSub extends SubCommand {
 	}
 
 	private Location getSpawn() {
-		if(spawn != null)
-			return spawn;
+		if(spawn == null) {
+			Location loc = ConfigManager.getInstance().getWorldSpawn().add(0, 2, 0);
 
-		Location loc = ConfigManager.getInstance().getWorldSpawn().add(0, 2,0 );
+			for (Material mat = loc.getBlock().getType(); mat.equals(Material.AIR); mat = loc.getBlock().getType()) {
+				loc.subtract(0.0D, 1.0D, 0.0D);
+			}
 
-		for (Material mat = loc.getBlock().getType(); mat.equals(Material.AIR); mat = loc.getBlock().getType()) {
-			loc.subtract(0.0D, 1.0D, 0.0D);
+			loc.add(0.0D, 1.0D, 0.0D);
+
+			TreasureHunter.getInstance().getViewDistanceUtil().updateSpawnWorldDistance(loc.getWorld());
+			spawn = loc;
 		}
 
-		loc.add(0.0D, 1.0D, 0.0D);
-
-		return spawn = loc;
+		return spawn;
 	}
 }

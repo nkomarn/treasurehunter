@@ -109,8 +109,6 @@ public class StartSub extends SubCommand {
 		if (ConfigManager.getConfig().getBoolean("disable-god")) {
 			TreasureHunter.getEssentials().getUser(p).setGodModeEnabled(false);
 		}
-
-		TreasureHunter.getInstance().getViewDistanceUtil().setPlayerViewDistance(p, 2);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -147,7 +145,6 @@ public class StartSub extends SubCommand {
 
 			loc.add(0.0D, 1.0D, 0.0D);
 
-			TreasureHunter.getInstance().getViewDistanceUtil().updateSpawnWorldDistance(loc.getWorld());
 			spawn = loc;
 		}
 

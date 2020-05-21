@@ -164,7 +164,9 @@ public class ItemUtil {
 					break;
 				default:
 					// Log unknown argument
-					Bukkit.getLogger().warning("[TreasureHunter] Unknown property encountered: " + property + " while parsing item " + name);
+					// Skip empty properties
+					if (!property.isEmpty())
+						Bukkit.getLogger().warning("[TreasureHunter] Unknown property encountered: " + property + " while parsing item " + name);
 					break;
 			}
 		}

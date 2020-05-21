@@ -37,8 +37,6 @@ public class CancelSub extends SubCommand {
 		chest.getCancelled().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();
 
-		TreasureHunter.getInstance().getViewDistanceUtil().resetPlayerViewDistance(p);
-
 		sender.sendMessage(Messages.getString("command.cancel.cancelled"));
 	}
 

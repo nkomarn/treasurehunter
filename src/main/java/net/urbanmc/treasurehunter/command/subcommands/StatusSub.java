@@ -27,8 +27,10 @@ public class StatusSub extends SubCommand {
 
 		String hunters = "";
 
-		if(!chest.isFound())
-			hunters = (chest.getHunting().isEmpty() ? "No" : chest.getHunting().size()) + " players are hunting the chest!";
+		if(!chest.isFound()) {
+			hunters = (chest.getHunting().isEmpty() ? "No" : chest.getHunting().size())
+					+ " player" + (chest.getHunting().size() != 1 ? "s" : "") +  " are hunting the chest!";
+		}
 
 
 		String message = Messages.getString("command.status", chest.getType().getDisplayName(),

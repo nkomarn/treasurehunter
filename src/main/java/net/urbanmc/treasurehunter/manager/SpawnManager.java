@@ -126,6 +126,10 @@ public class SpawnManager {
 				}
 			}
 
+			// Set x z coords.
+			xZ[0] = x;
+			xZ[1] = z;
+
 			validPosFound = true;
 		}
 
@@ -151,10 +155,10 @@ public class SpawnManager {
 		if (townyWorld == null)
 			return false;
 
-		Coord mutableCoord = new Coord(cx, cz);
+		final Coord centerCoord = new Coord(cx, cz);
 		// Check initial coord
 		try {
-			 if(townyWorld.hasTownBlock(mutableCoord))
+			 if(townyWorld.hasTownBlock(centerCoord))
 			 	return true;
 		} catch (Exception ignore) {}
 
@@ -165,12 +169,11 @@ public class SpawnManager {
 						continue;
 					}
 
-					mutableCoord.setX(cx + (i * facX));
-					mutableCoord.setZ(cz + (i * facZ));
-
+					// #add returns a new coord
+					final Coord offsetCoord = centerCoord.add((i * facX), (i * facZ));
 					try {
 						// TownyBlocks are stored in a hashtable which is synchronized
-						if (townyWorld.hasTownBlock(mutableCoord)) {
+						if (townyWorld.hasTownBlock(offsetCoord)) {
 							return true;
 						}
 					} catch (Exception e) {

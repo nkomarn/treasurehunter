@@ -59,6 +59,12 @@ public class SpawnTask implements Runnable {
 			int[] xZ = SpawnManager.getInstance().generateLocationAsync(
 					chain.getTaskData("worldName"), chain.getTaskData("worldBorder"), type);
 
+			// Handle null location array
+			if (xZ == null) {
+				chain.abortChain();
+				return;
+			}
+
 			chain.removeTaskData("worldName");
 			chain.removeTaskData("worldBorder");
 

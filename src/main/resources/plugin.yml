@@ -5,7 +5,7 @@ api-version: 1.14
 description: Spawns chests around the world at intervals containing various loot
 depend: [TimerLib]
 authors: [Elian, Silverwolfg11]
-softdepend: [Multiverse-Core, Essentials, Towny]
+softdepend: [Multiverse-Core, Essentials, EssentialsSpawn, Towny]
 
 commands:
   treasurehunter:

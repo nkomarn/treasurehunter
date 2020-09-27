@@ -33,6 +33,11 @@
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
+        <!-- Towny Repo -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -67,15 +72,16 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.palmergames</groupId>
+            <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>1.2</version>
+            <version>0.96.2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.Silverwolfg11</groupId>
             <artifactId>TimerLib</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- PaperLib Dependency !-->
         <dependency>
@@ -100,13 +106,6 @@
                             <shadedPattern>net.urbanmc.paperlib</shadedPattern> <!-- Replace this -->
                         </relocation>
                     </relocations>
-                    <artifactSet>
-                        <excludes>
-                            <exclude>me.Silverwolfg11:TimerLib</exclude>
-                            <exclude>co.aikar:taskchain-bukkit</exclude>
-                            <exclude>co.aikar:taskchain-core</exclude>
-                        </excludes>
-                    </artifactSet>
                 </configuration>
                 <executions>
                     <execution>

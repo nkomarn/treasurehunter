@@ -1,5 +1,6 @@
 package net.urbanmc.treasurehunter.util;
 
+import net.urbanmc.treasurehunter.TreasureHunter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -18,6 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ItemUtil {
 
@@ -42,6 +44,8 @@ public class ItemUtil {
 	}
 
 	private static ItemStack getItem(String name, FileConfiguration data) {
+		final Logger logger = TreasureHunter.getInstance().getLogger();
+
 		String[] split = name.split(" ");
 
 		if(SpecialItemParser.isSpecialItem(split[0], data))
@@ -50,7 +54,7 @@ public class ItemUtil {
 		Material mat = Material.getMaterial(split[0].toUpperCase());
 
 		if (mat == null) {
-			Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading material for " + name);
+			logger.severe("Error loading material for " + name);
 			return null;
 		}
 
@@ -65,7 +69,7 @@ public class ItemUtil {
 
 			if (splitCharIndex == -1 || splitCharIndex == (fullArgument.length() - 1)) {
 				// Log unknown argument
-				Bukkit.getLogger().warning("[TreasureHunter] Unknown argument encountered: " + fullArgument + " while parsing item " + name);
+				logger.warning("Unknown argument encountered: \"" + fullArgument + "\" while parsing item " + name);
 				continue;
 			}
 
@@ -105,7 +109,7 @@ public class ItemUtil {
 					Enchantment ench = getEnchantment(enchantSplit[0]);
 
 					if (ench == null) {
-						Bukkit.getLogger().log(Level.SEVERE, "[TreasureHunter] Error loading enchant " + enchantSplit[0] + " for " + name);
+						logger.severe("Error loading enchant \"" + enchantSplit[0] + "\" for " + name);
 						continue;
 					}
 
@@ -126,7 +130,7 @@ public class ItemUtil {
 					Enchantment ench = getEnchantment(enchantSplit[0]);
 
 					if (ench == null) {
-						Bukkit.getLogger().warning("[TreasureHunter] Cannot parse enchantment book " + enchantSplit[0] + " for item " + mat.name());
+						logger.warning("Cannot parse enchantment book \"" + enchantSplit[0] + "\" for item " + mat.name());
 						continue;
 					}
 
@@ -142,7 +146,7 @@ public class ItemUtil {
 					PotionEffectType effectType = PotionEffectType.getByName(effectSplit[0].toUpperCase());
 
 					if (effectType == null) {
-						Bukkit.getLogger().warning("Cannot parse potion effect " + effectSplit[0] + " for item " + mat.name());
+						logger.warning("Cannot parse potion effect \"" + effectSplit[0] + "\" for item " + mat.name());
 						continue;
 					}
 
@@ -166,7 +170,7 @@ public class ItemUtil {
 					// Log unknown argument
 					// Skip empty properties
 					if (!property.isEmpty())
-						Bukkit.getLogger().warning("[TreasureHunter] Unknown property encountered: " + property + " while parsing item " + name);
+						logger.warning("Unknown property encountered: \"" + property + "\" while parsing item " + name);
 					break;
 			}
 		}
@@ -188,7 +192,7 @@ public class ItemUtil {
 			((LeatherArmorMeta) meta).setColor(color);
 		}
 		else {
-			Bukkit.getLogger().warning("[TreasureHunter] Cannot apply leather armor color to material type!");
+			TreasureHunter.getInstance().getLogger().warning("Cannot apply leather armor color to material type!");
 		}
 	}
 
@@ -200,7 +204,7 @@ public class ItemUtil {
 					Integer.valueOf(hex.substring(5, 7), 16)
 			);
 		} catch (NumberFormatException ex) {
-			Bukkit.getLogger().warning("[TreasureHunter] Could not parse hexadecimal rgb value for " + hex + "!");
+			TreasureHunter.getInstance().getLogger().warning("Could not parse hexadecimal rgb value for " + hex + "!");
 			return Color.WHITE;
 		}
 	}
@@ -243,7 +247,7 @@ public class ItemUtil {
 				return Color.WHITE;
 		}
 
-		Bukkit.getLogger().warning("[TreasureHunter] Error parsing leather armor color for color name: " + colorName);
+		TreasureHunter.getInstance().getLogger().warning("Error parsing leather armor color for color name: " + colorName);
 		return Color.WHITE;
 	}
 

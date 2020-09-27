@@ -8,6 +8,7 @@ import net.urbanmc.treasurehunter.object.Permission;
 import net.urbanmc.treasurehunter.object.SubCommand;
 import net.urbanmc.treasurehunter.object.TreasureChest;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -16,14 +17,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 public class StartSub extends SubCommand {
 
 	public static ItemStack compass;
-	private List<UUID> warned = new ArrayList<>();
+	private Collection<UUID> warned = new HashSet<>();
 	private Location spawn;
 
 	public StartSub() {
@@ -82,8 +85,7 @@ public class StartSub extends SubCommand {
 
 	private void timeOut(UUID p) {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(TreasureHunter.getInstance(), () -> {
-			if (warned.contains(p))
-				warned.remove(p);
+			warned.remove(p);
 		}, 500);
 	}
 
@@ -91,7 +93,11 @@ public class StartSub extends SubCommand {
 		warned.remove(p.getUniqueId());
 
 		p.setFallDistance(0);
-		p.teleport(getSpawn());
+		// Make sure teleport is successful to prevent incorrect starting
+		if(!p.teleport(getSpawn())) {
+			p.sendMessage(ChatColor.RED + "Failed to teleport to spawn! Please try again!");
+			return;
+		}
 
 		chest.getHunting().add(p.getUniqueId());
 		TreasureChestManager.getInstance().saveChest();
@@ -117,16 +123,9 @@ public class StartSub extends SubCommand {
 			return true;
 
 		for (ItemStack item : p.getInventory()) {
-			if (item == null)
-				continue;
-
-			if (item.getType() != is.getType())
-				continue;
-
-			if (item.getData().getData() != is.getData().getData())
-				continue;
-
-			if (item.getAmount() + is.getAmount() > 64)
+			if (item == null || item.getType() != is.getType()
+				|| item.getData().getData() != is.getData().getData()
+				|| (item.getAmount() + is.getAmount() > 64))
 				continue;
 
 			return true;

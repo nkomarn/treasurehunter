@@ -48,6 +48,12 @@ public class TreasureHunter extends JavaPlugin {
 		}
 	}
 
+	@Override
+	public void onDisable() {
+		// Cleanup
+		instance = null;
+	}
+
 	/*
 	 * This method initializes the managers before registering/starting so that we know if there are errors.
 	 * If there are any errors, we will not start the task.

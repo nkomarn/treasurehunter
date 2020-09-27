@@ -96,9 +96,18 @@ public class ConfigManager {
 	}
 
 	private void setWorldSpawn() {
-		EssentialsSpawn spawn = (EssentialsSpawn) Bukkit.getPluginManager().getPlugin("EssentialsSpawn");
+		String worldName = data.getString("world");
 
-		worldSpawn = spawn.getSpawn("default");
+		World world = worldName != null ? Bukkit.getWorld(worldName) : null;
+
+		if (world != null) {
+			worldSpawn = world.getSpawnLocation();
+		}
+		else {
+			TreasureHunter.getInstance().getLogger().warning("Could not get world name to set spawn location! Using EssentialsSpawn...");
+			EssentialsSpawn spawn = (EssentialsSpawn) Bukkit.getPluginManager().getPlugin("EssentialsSpawn");
+			worldSpawn = spawn.getSpawn("default");
+		}
 	}
 
 	public Location getWorldSpawn() {

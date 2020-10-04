@@ -199,9 +199,9 @@ public class ItemUtil {
 	private static Color colorFromHex(String hex) {
 		try {
 			return Color.fromRGB(
-					Integer.valueOf(hex.substring(1, 3), 16),
-					Integer.valueOf(hex.substring(3, 5), 16),
-					Integer.valueOf(hex.substring(5, 7), 16)
+					Integer.valueOf(hex.substring(0, 2), 16),
+					Integer.valueOf(hex.substring(2, 4), 16),
+					Integer.valueOf(hex.substring(4, 6), 16)
 			);
 		} catch (NumberFormatException ex) {
 			TreasureHunter.getInstance().getLogger().warning("Could not parse hexadecimal rgb value for " + hex + "!");

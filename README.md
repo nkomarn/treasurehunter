@@ -1,9 +1,5 @@
 # TreasureHunter
-Spawns chests around the world at intervals containing
-various loot.
-
-# Server
-http://urbanmc.net
+Spawns chests around the world at intervals containing various loot.
 
 # Developers
 Elian, Silverwolfg11

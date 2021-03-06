@@ -42,9 +42,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.Silverwolfg11</groupId>
-            <artifactId>Harmony-API</artifactId>
-            <version>1.15</version>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -118,17 +118,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>elian-repo</id>
-            <url>${elian-repo.write.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>elian-repo</id>
-            <url>${elian-repo.write.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

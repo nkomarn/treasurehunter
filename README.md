@@ -14,7 +14,7 @@ The spawn ranges for each chest can be editted in `spawns.yml`.
 The items within each chest can be configured in `items.yml`.
 
 ## Installing
-The plugin can be installed via the releases page.
+The plugin can be installed via the [releases page](https://github.com/UrbanMC-Devs/TreasureHunter/releases/latest).
 
 ## Building
 This is a standard maven project and can be built via `mvn clean package`. 

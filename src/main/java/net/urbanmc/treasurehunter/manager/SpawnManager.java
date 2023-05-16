@@ -1,9 +1,7 @@
 package net.urbanmc.treasurehunter.manager;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Coord;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
 import net.urbanmc.treasurehunter.object.TreasureChest.TreasureChestType;
 import org.bukkit.*;
@@ -15,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -92,11 +88,7 @@ public class SpawnManager {
 		}
 
 		// Check if a towny world exists for the world
-		TownyWorld townyWorld = null;
-		try {
-			townyWorld = TownyAPI.getInstance().getDataSource().getWorld(worldName);
-		} catch (NotRegisteredException ignore) {
-		}
+		TownyWorld townyWorld = TownyAPI.getInstance().getTownyWorld(worldName);
 
 		// Establish loop vars
 		boolean validPosFound = false;

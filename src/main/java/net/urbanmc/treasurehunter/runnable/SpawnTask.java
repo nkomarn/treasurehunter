@@ -133,7 +133,7 @@ public class SpawnTask implements Runnable {
 		}
 
 		//Get the location from the cords and world
-		Location loc = new Location(world, x, y, z);
+		Location loc = new Location(world, x, y + 1, z);
 
 		if (loc == null) {
 			Bukkit.getLogger().severe("[TreasureHunter] Error generating location for chest!");

@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,6 +21,15 @@ import java.util.List;
 
 
 public class SpawnTask implements Runnable {
+	private final TreasureChestType desiredType;
+
+	public SpawnTask() {
+		this(null);
+	}
+
+	public SpawnTask(@Nullable TreasureChestType desiredType) {
+		this.desiredType = desiredType;
+	}
 
 	@Override
 	public void run() {
@@ -96,7 +106,9 @@ public class SpawnTask implements Runnable {
 	}
 
 	private TreasureChestType randomType() {
-		return ItemManager.getInstance().randomChestType();
+		return desiredType == null
+				? ItemManager.getInstance().randomChestType()
+				: desiredType;
 	}
 
 	private List<ItemStack> getItems(TreasureChestType type) {

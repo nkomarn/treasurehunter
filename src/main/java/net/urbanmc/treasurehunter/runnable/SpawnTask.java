@@ -23,6 +23,11 @@ public class SpawnTask implements Runnable {
 
 	@Override
 	public void run() {
+		if (TreasureHunter.getInstance().isError()) {
+			TreasureHunter.getInstance().throwError();
+			return;
+		}
+
 		TaskChain<?> chain = TreasureHunter.getInstance().newChain();
 
 		chain.sync(() -> {

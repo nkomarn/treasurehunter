@@ -4,6 +4,9 @@
 # TreasureHunter only runs in one normal world! (not nether or end)
 world: 'world'
 
+# How frequently chests spawn, in minutes
+interval: 60
+
 # While hunting the treasure, by default, players won't be able to fly or use /god.
 # You can disable this by setting either options to false;
 disable-fly: true

@@ -9,10 +9,12 @@ import net.urbanmc.treasurehunter.command.THCommand;
 import net.urbanmc.treasurehunter.listener.*;
 import net.urbanmc.treasurehunter.manager.ConfigManager;
 import net.urbanmc.treasurehunter.manager.ItemManager;
+import net.urbanmc.treasurehunter.runnable.SpawnTask;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class TreasureHunter extends JavaPlugin {
@@ -42,6 +44,7 @@ public class TreasureHunter extends JavaPlugin {
 
 		registerListeners();
 		registerCommand();
+		registerRepeatingTasks();
 
 		if (isError()) { // The manager class should print the error reason
 			getLogger().info("Cannot start task due to errors. " + isError);
@@ -91,7 +94,6 @@ public class TreasureHunter extends JavaPlugin {
 		registerListener(new FlyListener());
 		registerListener(new GodListener());
 		registerListener(new TeleportListener());
-		registerListener(new HourListener());
 	}
 
 	private void registerListener(Listener l) {
@@ -100,6 +102,11 @@ public class TreasureHunter extends JavaPlugin {
 
 	private void registerCommand() {
 		getCommand("treasurehunter").setExecutor(new THCommand());
+	}
+
+	private void registerRepeatingTasks() {
+		var interval = TimeUnit.MINUTES.toSeconds(ConfigManager.getConfig().getInt("interval", 60)) * 20L;
+		getServer().getScheduler().runTaskTimer(this, new SpawnTask(), 0L, interval);
 	}
 
 	private boolean checkDependencies() {

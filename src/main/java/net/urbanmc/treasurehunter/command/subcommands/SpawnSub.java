@@ -24,7 +24,7 @@ public class SpawnSub extends SubCommand {
 			return;
 		}
 
-		var desiredType = args.length >= 1
+		var desiredType = args.length >= 2
 				? Enums.getIfPresent(TreasureChest.TreasureChestType.class, args[1].toUpperCase()).orNull()
 				: null;
 

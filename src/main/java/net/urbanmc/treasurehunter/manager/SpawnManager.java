@@ -65,14 +65,17 @@ public class SpawnManager {
 		Random random = ThreadLocalRandom.current();
 
 		// Get config values
+		int originX = data.getInt(prefix + "origin.x", 0);
+		int originZ = data.getInt(prefix + "origin.z", 0);
+
 		int xRange = data.getInt(prefix + "range-x");
 		int zRange = data.getInt(prefix + "range-z");
 		int chunkRange = data.getInt(prefix + "range-chunk");
 
-		int noZoneX = data.getInt(prefix + "nozone-x");
-		int noZoneZ = data.getInt(prefix + "nozone-z");
-		int noZoneNegativeX = -noZoneX;
-		int noZoneNegativeZ = -noZoneZ;
+		int noZoneX = data.getInt(prefix + "nozone-x") + originX;
+		int noZoneZ = data.getInt(prefix + "nozone-z") + originZ;
+		int noZoneNegativeX = data.getInt(prefix + "nozone-x") - originX;
+		int noZoneNegativeZ = data.getInt(prefix + "nozone-z") - originZ;
 
 		int[] xZ = new int[2];
 
@@ -96,8 +99,8 @@ public class SpawnManager {
 
 		for (timeout = 0; timeout < 51 && !validPosFound; ++timeout) {
 			// Choose a random x and z position from within the range.
-			int x = random.nextInt(xRange * 2) - xRange;
-			int z = random.nextInt(zRange * 2) - zRange;
+			int x = random.nextInt(originX - xRange, originX + xRange);
+			int z = random.nextInt(originZ - zRange, originZ + zRange);
 
 			// Validate that location is inside worldborder
 			if (hasWorldBorder && (x > wbMaxX || x < wbMinX || z > wbMaxZ || x < wbMinZ))

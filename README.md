@@ -1,9 +1,6 @@
 # TreasureHunter
 A bukkit plugin that spawns pre-defined tiered chests with configurable loot at hourly intervals around a world. 
 
-## Requires Timer Lib 
-This plugin requires another custom plugin called `TimerLib`. `TimerLib` is an API plugin that provides events at precise intervals: every 5 minutes, hourly, daily. `TimerLib` also includes [Aikar's TaskChain](https://github.com/aikar/TaskChain) which other plugins can utilize. `TreasureHunter` requires both features to work.
-
 ## Chest Types
 There are four chest types: common, rare, epic, and legendary. 
 
